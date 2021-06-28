@@ -12,7 +12,6 @@ args = parser.parse_args()
 
 def main():
     nb_url = "https://{}".format(args.netbox)
-    global nb
     nb = pynetbox.api(nb_url, token=args.key)
 
     current_term = ""
