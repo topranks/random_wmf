@@ -17,12 +17,13 @@ def main():
     current_term = ""
     with open(args.file) as f:
         for line in f.readlines():
-            comment = ""
             if "term" in line:
                 this_term = line.rstrip("\n").split()[7]
                 if this_term != current_term:
                     current_term = this_term
                     print()
+
+            comment = ""
             if "from destination-address" in line or "from source-address" in line:
                 addr = ipaddress.ip_network(line.rstrip("\n").split()[-1])
                 # Single IP
