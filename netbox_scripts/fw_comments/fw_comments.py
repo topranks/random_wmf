@@ -3,8 +3,6 @@
 import argparse
 import pynetbox
 import ipaddress
-import pprint
-import sys
 
 parser = argparse.ArgumentParser(description='Stupid Netbox Thing')
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
