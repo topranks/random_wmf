@@ -4,7 +4,7 @@ import argparse
 import pynetbox
 import ipaddress
 
-parser = argparse.ArgumentParser(description='Stupid Netbox Thing')
+parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-k', '--key', help='API Token / Key', required=True, type=str)
 parser.add_argument('-f', '--file', help='File with firewall display set commands', type=str, required=True)
