@@ -1,0 +1,13 @@
+#!/bin/bash
+# Run from inside the 'configs' directory from the Rancid repo to get list of devices grouped by JunOS versions 
+
+VERSIONS=$(grep -A1 Model * | grep Junos | awk '{print $1,$NF}' | sort | uniq | sed 's/\./ /' | awk '{print $NF,$1}' | sort -n)
+CURRENT_VER=$(echo "$VERSIONS" | head -n1 | awk '{print $1}')
+while IFS= read -r line; do
+    VERSION=$(echo $line | awk '{print $1}')
+    if [ "$VERSION" != "$CURRENT_VER" ]; then
+        echo ""
+    fi
+    CURRENT_VER=$VERSION
+    echo "$line"
+done <<< "$VERSIONS"
