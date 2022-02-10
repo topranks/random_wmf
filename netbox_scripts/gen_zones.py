@@ -50,12 +50,9 @@ def main():
 
     for vlan_name, ip_net in v6_pfx.items():
         rev_hextets = str(ip_net.network_address.exploded).split(":")[0:4][::-1]
-        rev_nibbles = []
-        for hextet in rev_hextets:
-            rev_nibbles.append(hextet[::-1])
-
+        rev_nibbles = [hextet[::-1] for hextet in rev_hextets]
+        
         originstr = ".".join(rev_nibbles[0])
-
         concat = "".join(rev_nibbles)
         zonefile = ".".join(concat) + ".ip6.arpa"
 
