@@ -2,7 +2,6 @@
 
 import argparse
 import pynetbox
-import sys
 import ipaddress
 
 parser = argparse.ArgumentParser()
@@ -50,14 +49,14 @@ def main():
         print("")
 
     for vlan_name, ip_net in v6_pfx.items():
-        rev_nibbles = str(ip_net.network_address.exploded).split(":")[0:4][::-1]
-        rev_rev_nibbles = []
-        for nibble in rev_nibbles:
-            rev_rev_nibbles.append(nibble[::-1])
+        rev_hextets = str(ip_net.network_address.exploded).split(":")[0:4][::-1]
+        rev_nibbles = []
+        for hextet in rev_hextets:
+            rev_nibbles.append(hextet[::-1])
 
-        originstr = ".".join(rev_rev_nibbles[0])
+        originstr = ".".join(rev_nibbles[0])
 
-        concat = "".join(rev_rev_nibbles)
+        concat = "".join(rev_nibbles)
         zonefile = ".".join(concat) + ".ip6.arpa"
 
         print(f"; {vlan_name} ({ip_net})")
