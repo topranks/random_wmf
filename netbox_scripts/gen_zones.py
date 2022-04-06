@@ -14,15 +14,12 @@ def main():
     nb = pynetbox.api(nb_url, token=args.key)
 
     # You can pre-add networks as shown below as required.
-    v4_pfx = {"drmrs_loopbacks_interconnects": ipaddress.ip_network('10.136.127.0/24')}
-    v6_pfx = {"cr1-eqiad_to_lsw1-e1-eqiad":  ipaddress.ip_network('2620:0:861:fe07::/64'),
-                "cr2-eqiad_to_lsw1-f1-eqiad": ipaddress.ip_network('2620:0:861:fe08::/64'),
-                "cr2-eqdfw_to_asw1-b13-drmrs": ipaddress.ip_network('2620:0:860:fe0a::/64')
-    }
+    v4_pfx = {"evpn_eqiad_loop4": ipaddress.ip_network('10.64.146.0/24')}
+    v6_pfx = {"evpn_eqiad_loop6":  ipaddress.ip_network('2620:0:861:11b::/64')}
 
     # Or if the subnets are associated with Vlans specify the range here
     vlan_id = 1031
-    while vlan_id<1033:
+    while vlan_id<1031:
         vlan = nb.ipam.vlans.get(group_id=13, vid=vlan_id)
         print(vlan)
 
