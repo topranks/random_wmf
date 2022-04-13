@@ -40,13 +40,15 @@ def main():
         print("ERROR: Config returned not in JSON format, JunOS version too old?")
         sys.exit(1)
 
+
+    phys_int_regex = '^ge-|^xe-|^et-|^ae|^lo0|^fxp|^em'
     dev_ints = set()
     for interface in config['configuration']['interfaces']['interface']:
-        if re.match('^ge|^xe|^et|^ae|^lo0', interface['name']):
+        if re.match(phys_int_regex, interface['name']):
             dev_ints.add(interface['name'])
         if "unit" in interface:
             for unit in interface['unit']:
-                if unit['name'] != 0:
+                if unit['name'] != 0 or not re.match(phys_int_regex, interface['name']):
                     dev_ints.add(f"{interface['name']}.{unit['name']}")
 
     junos_dev.close()
