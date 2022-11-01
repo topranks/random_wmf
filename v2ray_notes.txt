@@ -1,0 +1,12 @@
+https://henrywithu.com/use-cloudflare-certificate-with-nginx-v2ray-websocket-tls-cdn/
+
+wget https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
+
+
+Basic technique is you run the VMESS protocol (improved shadowsocks), but then encrypt that 
+in TLS, and put it behind Cloudflare or whatever.
+
+Nginx runs on the VPS, and Cloudflare forwards the traffic to it over this.  It proxies 
+traffic for a specific path (/info in this case) to the local v2ray process listening on 
+127.0.0.1:<port> in plaintext.  The v2ray daemon then decodes the vmess encoded proxy 
+request, and sends the actual request out on the internet.
