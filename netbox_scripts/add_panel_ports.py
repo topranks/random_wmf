@@ -21,8 +21,8 @@ def main():
 
     panel = nb.dcim.devices.get(name=args.panel)
 
-    for module in range(modules):
-        for pair in range(pairs_per_module):
+    for module in range(args.modules):
+        for pair in range(args.pairs):
             port_name = f"{module + 1}/{(pair*2)+1}-{(pair*2)+2}"
             new_rear = nb.dcim.rear_ports.create(device=panel.id, name=port_name, type="lc")
             new_front = nb.dcim.front_ports.create(device=panel.id, name=port_name, type="lc", rear_port=new_rear.id)
