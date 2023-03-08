@@ -27,6 +27,9 @@ def main():
         print(f"{device.name}")
         ip_addr = nb.ipam.ip_addresses.get(device.primary_ip.id)
         junos_dev = get_device(ip_addr.dns_name)
+junos_dev.rpc.get_config(options={'format':'json'})['configuration']
+
+
         config = junos_dev.rpc.get_config(options={'format':'json'})['configuration']
         try:
             for interface in config['protocols']['router-advertisement']['interface']:

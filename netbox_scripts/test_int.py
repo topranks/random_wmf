@@ -14,14 +14,18 @@ def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
-    device = nb.dcim.devices.get(name="lsw1-e1-eqiad")
+    devices = ["lsw1-e1-eqiad", 
+                "lsw1-f1-eqiad"]
 
-    print(device)
+    for device_name in devices:
+        device = nb.dcim.devices.get(name=device_name)
+        print(device)
 
-    interface = nb.dcim.interfaces.get(device_id=device.id, name="et-0/0/49")
-
-    print(dir(interface.device))
-
+        interfaces = nb.dcim.interfaces.filter(device=device_name)
+        for interface in interfaces:
+            print(interface)
+            print(dir(interface))
+            
 
 if __name__=="__main__":
     main()

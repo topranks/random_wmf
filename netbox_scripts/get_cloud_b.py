@@ -10,7 +10,7 @@ parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=s
 parser.add_argument('-k', '--key', help='API Token / Key', required=True, type=str)
 args = parser.parse_args()
 
-vlan_id = 1105
+vlan_id = 1118
 
 def main():
     nb_url = "https://{}".format(args.netbox)
@@ -22,7 +22,7 @@ def main():
 
     for interface in interfaces: 
         if interface.connected_endpoint:
-            print(f"{interface.connected_endpoint.device.name:<30} {interface.connected_endpoint.name}")
+            print(f"{interface.connected_endpoint.device.name:<30} {interface.device.name}")
 
 
 if __name__=="__main__":

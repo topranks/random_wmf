@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-k', '--key', help='Netbox API Token / Key', type=str, default='')
 parser.add_argument('-s', '--sshconfig', help='SSH config file', default='~/.ssh/config.homer')
-parser.add_argument('-d', '--outputdir', help='Directory for output YAML files', default='junos_configs')
+parser.add_argument('-d', '--outputdir', help='Directory for output YAML files', default='junos_data')
 args = parser.parse_args()
 
 def main():
@@ -30,8 +30,8 @@ def main():
         nb_key = getpass(prompt="Netbox API Key: ")
     nb = pynetbox.api(nb_url, nb_key)
 
-    p = Path(args.outputdir)
-    p.mkdir(exist_ok=True)
+    Path(f"{args.outputdir}/config").mkdir(exist_ok=True, parents=True)
+    Path(f"{args.outputdir}/ospf_ints").mkdir(exist_ok=True, parents=True)
 
     device_roles = ['cr']
     device_statuses = ['active', 'staged']
@@ -41,16 +41,26 @@ def main():
         for nb_device in nb_devices:
             if str(nb_device.status).lower() not in device_statuses:
                 continue
+            print(f"Connecting to {nb_device.name}... ", end="", flush=True)
             dev_pri_ip = nb.ipam.ip_addresses.get(nb_device.primary_ip.id)
             junos_dev = get_junos_dev(dev_pri_ip.dns_name)
-            filter_xml = "<protocols><bgp/></protocols>"
-            config = junos_dev.rpc.get_config(options={'format':'json'}, filter_xml=filter_xml)
 
-            with open(f"{args.outputdir}/{nb_device.name}", "w") as new_file:
-                new_file.write(json.dumps(config))
-                print(f"Saved JSON config for {nb_device.name}.")
+            config_filter = "<protocols><bgp/></protocols>"
+            config = junos_dev.rpc.get_config(options={'format':'json'}, filter_xml=config_filter)
+            with open(f"{args.outputdir}/config/{nb_device.name}.json", "w") as config_file:
+                config_file.write(json.dumps(config))
+
+            ospf_metrics = {}
+            ospf_ints = junos_dev.rpc.get_ospf_interface_information({'format':'json'}, detail=True)
+            for ospf_int in ospf_ints['ospf-interface-information'][0]['ospf-interface']:
+                metric = int(ospf_int['ospf-interface-topology'][0]['ospf-topology-metric'][0]['data'])
+                ospf_metrics[ospf_int['interface-name'][0]['data']] = metric
+
+            with open(f"{args.outputdir}/ospf_ints/{nb_device.name}.json", "w") as metric_file:
+                metric_file.write(json.dumps(ospf_metrics))
 
             junos_dev.close()
+            print("saved ok.")
 
 def get_junos_dev(dev_name):
     # Initiates NETCONF session to router

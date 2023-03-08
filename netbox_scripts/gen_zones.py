@@ -14,9 +14,9 @@ def main():
     nb = pynetbox.api(nb_url, token=args.key)
 
     # You can pre-add networks as shown below as required.
-#    v4_pfx = {"evpn_eqiad_loop4": ipaddress.ip_network('10.64.146.0/24')}
-#    v6_pfx = {"evpn_eqiad_loop6":  ipaddress.ip_network('2620:0:861:11b::/64')}
-
+    v4_pfx = {"evpn_eqiad_loop4": ipaddress.ip_network('10.64.146.0/24')}
+    v6_pfx = {"evpn_eqiad_loop6":  ipaddress.ip_network('2001:df2:e500:fe07::/64')}
+    '''
     v4_pfx = {}
     v6_pfx = {}
 
@@ -37,6 +37,7 @@ def main():
         vlan_id += 1
 
     print("")
+    '''
 
     for vlan_name, ip_net in v4_pfx.items():
         rev_octets = str(ip_net.network_address).split(".")[0:3][::-1]
