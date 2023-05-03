@@ -1,0 +1,4 @@
+cloudcephosd2003-dev	5	asw-b1-codfw ge-1/0/7	cloudsw1-b1-codfw ge-0/0/4
+cloudcephosd2003-dev	5	asw-b1-codfw ge-1/0/8	cloudsw1-b1-codfw ge-0/0/24
+cloudcephmon2004-dev	20	asw-b1-codfw ge-1/0/9	cloudsw1-b1-codfw ge-0/0/19
+cloudvirt2003-dev	6	asw-b1-codfw ge-1/0/10	cloudsw1-b1-codfw ge-0/0/5
