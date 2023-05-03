@@ -2,8 +2,6 @@
 
 import argparse
 import pynetbox
-import sys
-import ipaddress
 import json
 
 parser = argparse.ArgumentParser()
