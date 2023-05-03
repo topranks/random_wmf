@@ -26,8 +26,11 @@ def main():
             int_details['connection'] = {}
             int_details['connection']['device'] = interface.connected_endpoint.device.name
             int_details['connection']['interface'] = interface.connected_endpoint.name
-        for ip in ips:
-            int_details[interface.name]['ip'] = { str(ip): ip.dns_name }
+        ips = nb.ipam.ip_addresses.filter(interface_id=interface.id)
+        if ips:
+            int_details[interface.name]['ips'] = []
+            for ip in ips:
+                int_details[interface.name]['ips'].append({ str(ip): ip.dns_name })
 
     print(json.dumps(int_details, indent=2))
 
