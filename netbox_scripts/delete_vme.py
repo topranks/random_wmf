@@ -2,28 +2,21 @@
 
 import argparse
 import pynetbox
-import sys
-import ipaddress
+import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-k', '--key', help='API Token / Key', required=True, type=str)
 args = parser.parse_args()
 
-vlan_id = 1118
-
 def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
-    vlan = nb.ipam.vlans.get(vid=vlan_id)
+    vme_ints = nb.dcim.interfaces.filter(name__isw='vme')
 
-    interfaces = nb.dcim.interfaces.filter(vlan_id=vlan.id)
-
-    for interface in interfaces: 
-        if interface.connected_endpoint:
-            print(f"{interface.connected_endpoint.device.name:<30} {interface.connected_endpoint.name} - {interface.device.name} {interface.name}")
-
+    for vme_int in vme_ints:
+        print(f"{vme_int.device.name} {vme_int.name}")
 
 if __name__=="__main__":
     main()

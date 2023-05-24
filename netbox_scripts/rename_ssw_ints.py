@@ -10,19 +10,16 @@ parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=s
 parser.add_argument('-k', '--key', help='API Token / Key', required=True, type=str)
 args = parser.parse_args()
 
-vlan_id = 1118
-
 def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
-    vlan = nb.ipam.vlans.get(vid=vlan_id)
-
-    interfaces = nb.dcim.interfaces.filter(vlan_id=vlan.id)
-
-    for interface in interfaces: 
-        if interface.connected_endpoint:
-            print(f"{interface.connected_endpoint.device.name:<30} {interface.connected_endpoint.name} - {interface.device.name} {interface.name}")
+    device = nb.dcim.devices.get(name='ssw1-f1-eqiad')
+    interfaces = nb.dcim.interfaces.filter(device_id=device.id, name__isw="et")
+    for interface in interfaces:
+        new_name = interface.name.replace("et", "et-")
+        interface.name = new_name
+        interface.save()
 
 
 if __name__=="__main__":

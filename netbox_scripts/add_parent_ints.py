@@ -37,15 +37,15 @@ def main():
                     # Get and set parent interface and port modes
                     parent_int = int_dict[parent_int_name]
                     if (not nb_int.parent) or nb_int.parent.id != parent_int.id:
-#                       nb_int.parent = parent_int.id
+                       nb_int.parent = parent_int.id
                        print(f"    set {device.name} {nb_int.name} parent interface to {parent_int.name}")
-                    if (not parent_int.mode) or parent_int.mode.value != 'tagged':
-#                        parent_int.mode = 'tagged'
-#                        parent_int.save()
+                    if (not parent_int.mode) or parent_int.mode != 'tagged':
+                        parent_int.mode = 'tagged'
+                        parent_int.save()
                         print(f"    set {device.name} {parent_int.name} to mode tagged")
                         changed = True
-                    if (not nb_int.mode) or nb_int.mode.value != "access":
-#                        nb_int.mode = 'access'
+                    if (not nb_int.mode) or nb_int.mode != "access":
+                        nb_int.mode = 'access'
                         changed = True
                         print(f"    set {device.name} {nb_int.name} to mode access")
 
@@ -54,20 +54,20 @@ def main():
                     vlan = nb.ipam.vlans.get(vid=vlan_id, site_id=device.site.id)
                     if vlan:
                         if vlan not in parent_int.tagged_vlans:
-    #                        parent_int.tagged_vlans.add(vlan.id)
+                            parent_int.tagged_vlans.append(vlan.id)
                             changed = True
                             print(f"    added vlan id {vlan.vid} to tagged vlans on {device.name} {parent_int.name}")
                         if (not nb_int.untagged_vlan) or nb_int.untagged_vlan.id != vlan.id:
                             changed = True
-    #                        nb_int.untagged_vlan = vlan.id
+                            nb_int.untagged_vlan = vlan.id
                             print(f"    set {device.name} {nb_int.name} untagged vlan id to {vlan.vid}")
                     else:
                         print(f"    802.1q tag {vlan_id} not a vlan at site {device.site.slug} - not setting on ports")
 
                     if changed:
                         pass
-#                        parent_int.save()
-#                        nb_int.save()
+                        parent_int.save()
+                        nb_int.save()
                 else:
                     print(f"    ERROR: {int_name} defined but none called {parent_int_name} exists.")
 
