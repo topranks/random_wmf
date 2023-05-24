@@ -13,10 +13,10 @@ def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
-    int_details = {}
-
     device = nb.dcim.devices.get(name='lvs2007')
     interfaces = nb.dcim.interfaces.filter(device_id=device.id)
+    
+    int_details = {}
     for interface in interfaces:
         int_details[interface.name] = {}
         ips = nb.ipam.ip_addresses.filter(interface_id=interface.id)
