@@ -84,6 +84,22 @@ def move_ips(old_int, new_int):
     ips = nb.ipam.ip_addresses.filter(interface_id=old_int.id)
     for ip in ips:
         ip.assigned_object_id = new_int.id
+        if ip.dns_name:
+            newint_dnsname = new_int.name.replace('/', '-').replace('.', '-')
+            oldint_dnsname = old_int.name.replace('/', '-').replace('.', '-')
+            splitdns = ip.dns_name.split('.')
+            dnsname_one = splitdns[0]
+            dnsname_two = splitdns[1]
+            dns_suffix = splitdns[2:]
+            if old_int.device.name == dnsname_two and oldint_dnsname == dnsname_one:
+                # Old interface had DNS name based on normal pattern, udpate with new int and device name
+                new_dns_name = f"{newint_dnsname}.{new_int.device.name}.{'.'.join(dns_suffix)}"
+                print(f"    Chaning DNS entry for {ip} from {ip.dns_name} to {new_dns_name}... ", end="")
+                ip.dns_name = new_dns_name
+                print("done.")
+            else:
+                print(f"    Not updating DNS for {ip} - existing name {ip.dns_name} doesn't match pattern.")
+
         ip.save()
         print(f"    Moved {ip} from {old_int.device.name} {old_int.name} to {new_int.device.name} {new_int.name}")
 
