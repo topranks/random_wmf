@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import sys
 import argparse
 import pynetbox
 import ipaddress
@@ -13,31 +14,27 @@ def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
-    # You can pre-add networks as shown below as required.
-    v4_pfx = {"evpn_eqiad_loop4": ipaddress.ip_network('10.64.146.0/24')}
-    v6_pfx = {"evpn_eqiad_loop6":  ipaddress.ip_network('2001:df2:e500:fe07::/64')}
-    '''
-    v4_pfx = {}
-    v6_pfx = {}
+    # You can manually add pre-add networks as shown below as required.
+    #v4_pfx = {"evpn_eqiad_loop4": ipaddress.ip_network('10.64.146.0/24')}
+    #v6_pfx = {"evpn_eqiad_loop6":  ipaddress.ip_network('2001:df2:e500:fe07::/64')}
+    v4_pfx = {"esams_new_loopback4": ipaddress.ip_network('10.80.127.0/24')}
+    v6_pfx = {"cr2-esams <-> cr1-drmrs": ipaddress.ip_network('2a02:ec80:300:fe09::/64'),
+              "cr1-esams <-> cr2-drmrs": ipaddress.ip_network("2a02:ec80:300:fe0a::/64")}
+
 
     # Or if the subnets are associated with Vlans specify the range here
-    vlan_id = 1127
-    while vlan_id<=1128:
+    for vlan_id in []:
         vlan = nb.ipam.vlans.get(vid=vlan_id)
         print(vlan)
 
         prefixes = nb.ipam.prefixes.filter(vlan_id=vlan.id)
         for prefix in prefixes:
-            pfx = ipaddress.ip_network(prefix)
-            if type(pfx) == ipaddress.IPv4Network:
-              v4_pfx[vlan.name] = pfx
+            if prefix.family.value == 4:
+              v4_pfx[vlan.name] = ipaddress.ip_network(prefix.prefix)
             else:
-              v6_pfx[vlan.name] = pfx
+              v6_pfx[vlan.name] = ipaddress.ip_network(prefix.prefix)
             
-        vlan_id += 1
-
     print("")
-    '''
 
     for vlan_name, ip_net in v4_pfx.items():
         rev_octets = str(ip_net.network_address).split(".")[0:3][::-1]

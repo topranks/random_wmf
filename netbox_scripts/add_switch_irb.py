@@ -16,9 +16,7 @@ def main():
 
     eqiad_site = nb.dcim.sites.get(slug="eqiad")
 
-    i = 0
-    while i<8:
-        vlan_id = 1039 + i
+    for vlan_id in range(1055,1061):
         vlan = nb.ipam.vlans.get(group_id=13, site_id=eqiad_site.id, vid=vlan_id)
 
         rack = vlan.name.split("-")[1]
@@ -28,7 +26,9 @@ def main():
         irb_int = nb.dcim.interfaces.create(device=switch.id,
                                             name=f"irb.{vlan_id}",
                                             description=vlan.name,
+                                            vrf=2,
                                             type="virtual")
+        print(f"{switch.name} - {irb_int.name}")
 
         prefixes = nb.ipam.prefixes.filter(vlan_id=vlan.id)
         for prefix in prefixes:
@@ -37,10 +37,8 @@ def main():
             new_ip.assigned_object_id=irb_int.id
             new_ip.dns_name=f"irb-{vlan_id}.{switch_name}.eqiad.wmnet"
             new_ip.save()
-
-        print(switch_name)
-
-        i += 1
+            print(f"  {new_ip.address}")
+        print()
 
 
 if __name__=="__main__":

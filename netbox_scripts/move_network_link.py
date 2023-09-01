@@ -6,7 +6,7 @@ import sys
 import ipaddress
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox-next.wikimedia.org")
+parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-f', '--file', help='Name of file with space separated list of hostnames and ints', type=str, default="move_ints.txt")
 parser.add_argument('-k', '--key', help='API Token / Key', required=True, type=str)
 args = parser.parse_args()
