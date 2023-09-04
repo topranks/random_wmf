@@ -1,4 +1,4 @@
-== Spine/Leaf netbox allocator script ==
+### Spine/Leaf netbox allocator script
 
 Used to add Netbox elements for WMF spine/leaf networks, based on Juniper QFX interface naming.
 
