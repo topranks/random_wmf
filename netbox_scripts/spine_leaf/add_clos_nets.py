@@ -39,6 +39,7 @@ def main():
         nb_spine = nb.dcim.devices.get(name=spine_name)
         print(f"\n{spine_name.upper()}")
         add_loopback_interface(nb_spine, 'lo0', 0, [nb_subnets['underlay_loopbacks']])
+        add_loopback_interface(nb_spine, 'lo0.5000', 2, [nb_subnets['overlay_loopback4'], nb_subnets['overlay_loopback6']])
         spines.append(nb_spine)
 
     # Loop over leaf switches and add elements as needed
