@@ -14,6 +14,9 @@ def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
+    # TODO: Needs to be adjusted depending on IPv6 parent prefixes
+    # Works for 2620:0:860::/46, needs adjusting for thing in 2a02:ec80::/29
+
     # You can manually add pre-add networks as shown below as required.
     #v4_pfx = {"esams_new_loopback4": ipaddress.ip_network('10.80.127.0/24')}
     #v6_pfx = {"cr2-esams <-> cr1-drmrs": ipaddress.ip_network('2a02:ec80:300:fe09::/64'),
