@@ -15,15 +15,16 @@ def main():
     nb = pynetbox.api(nb_url, token=args.key)
 
     # You can manually add pre-add networks as shown below as required.
-    #v4_pfx = {"evpn_eqiad_loop4": ipaddress.ip_network('10.64.146.0/24')}
-    #v6_pfx = {"evpn_eqiad_loop6":  ipaddress.ip_network('2001:df2:e500:fe07::/64')}
-    v4_pfx = {"esams_new_loopback4": ipaddress.ip_network('10.80.127.0/24')}
-    v6_pfx = {"cr2-esams <-> cr1-drmrs": ipaddress.ip_network('2a02:ec80:300:fe09::/64'),
-              "cr1-esams <-> cr2-drmrs": ipaddress.ip_network("2a02:ec80:300:fe0a::/64")}
+    #v4_pfx = {"esams_new_loopback4": ipaddress.ip_network('10.80.127.0/24')}
+    #v6_pfx = {"cr2-esams <-> cr1-drmrs": ipaddress.ip_network('2a02:ec80:300:fe09::/64'),
+    #          "cr1-esams <-> cr2-drmrs": ipaddress.ip_network("2a02:ec80:300:fe0a::/64")}
+
+    v4_pfx = {}
+    v6_pfx = {}
 
 
     # Or if the subnets are associated with Vlans specify the range here
-    for vlan_id in []:
+    for vlan_id in range(2021, 2036):
         vlan = nb.ipam.vlans.get(vid=vlan_id)
         print(vlan)
 

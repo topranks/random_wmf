@@ -14,12 +14,16 @@ def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
-    i = 0
-    while i<16:
-        vlan_id = 1031 + i
-        i += 1
+    site_name = 'codfw'
+    install_server_name = 'install2004'
 
-        vlan = nb.ipam.vlans.get(group_id=13, vid=vlan_id)
+    site =  nb.dcim.sites.get(slug=site_name)
+    vlan_group = nb.ipam.vlan_groups.get(slug='production', site=site.id)
+    install_server = nb.virtualization.virtual_machines.get(name=install_server_name)
+    install_server_ip = install_server.primary_ip4.address.split("/")[0]
+
+    for vlan_id in range(2021, 2036):
+        vlan = nb.ipam.vlans.get(group_id=vlan_group.id, vid=vlan_id)
 
         prefixes = nb.ipam.prefixes.filter(vlan_id=vlan.id)
 
@@ -33,9 +37,9 @@ def main():
                 print(f"    option subnet-mask {pfx.netmask};")
                 print(f"    option broadcast-address {pfx[-1]};")
                 print(f"    option routers {pfx[1]};")
-                print("    option domain-name \"eqiad.wmnet\";")
+                print(f"    option domain-name \"{site_name}.wmnet\";")
                 print("")
-                print("    next-server 208.80.154.32; # install1003 (tftp server)")
+                print(f"    next-server {install_server_ip}; # {install_server_name} (tftp server)")
                 print("}")
                 print("")
 
