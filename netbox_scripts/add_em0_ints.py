@@ -16,6 +16,12 @@ def main():
 
     devices = nb.dcim.devices.filter(device_type_id=[163, 201, 151], site='eqiad')
     for device in devices:
+        print(f"{device.name} - {device.device_type.model}")
+        print(type(device.device_type.model))
+        break
+
+
+        '''
         interfaces = nb.dcim.interfaces.filter(device_id=device.id, name__isw="em", mgmt_only=True)
         if not interfaces:
             print(f"{device.name}.. ", end='')
@@ -25,6 +31,7 @@ def main():
             em1.enabled = False
             em1.save()
             print("done.")
+        '''
 
 
 

@@ -14,7 +14,7 @@ def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
-    site_name = 'codfw'
+    site_name = 'eqiad'
 #    install_server_name = 'install2004'
 
     site =  nb.dcim.sites.get(slug=site_name)
@@ -22,7 +22,7 @@ def main():
 #    install_server = nb.virtualization.virtual_machines.get(name=install_server_name)
 #    install_server_ip = install_server.primary_ip4.address.split("/")[0]
 
-    for vlan_id in range(2021, 2036):
+    for vlan_id in range(1047, 1063):
         vlan = nb.ipam.vlans.get(group_id=vlan_group.id, vid=vlan_id)
 
         prefixes = nb.ipam.prefixes.filter(vlan_id=vlan.id)
