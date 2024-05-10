@@ -39,3 +39,5 @@ skip_spine_int:
   - 8
 ```
 
+An example of running the script can be found [here](https://raw.githubusercontent.com/topranks/random_wmf/main/netbox_scripts/spine_leaf/output_log.txt)
+
