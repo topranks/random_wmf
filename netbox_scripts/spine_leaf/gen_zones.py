@@ -27,7 +27,7 @@ def main():
 
 
     # Or if the subnets are associated with Vlans specify the range here
-    for vlan_id in range(332, 333):
+    for vlan_id in range(2036, 2050):
         vlan = nb.ipam.vlans.get(vid=vlan_id)
         print(vlan)
 

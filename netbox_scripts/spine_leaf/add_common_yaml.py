@@ -11,14 +11,15 @@ parser.add_argument('-k', '--key', help='API Token / Key', required=True, type=s
 args = parser.parse_args()
 
 
-# input is a list of hostnames on separate lines
-
 def main():
+    """ Generates YAML data to be included in puppet hieradata/common.yaml 
+        Input file should be a list of device names on separate lines """
+
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
 
-    with open('new_devs.txt', 'r') as cable_file:
-        for line in cable_file.readlines():
+    with open('new_devs.txt', 'r') as devices_file:
+        for line in devices_file.readlines():
             device = nb.dcim.devices.get(name=line.rstrip())
             lo5000 = nb.dcim.interfaces.get(device_id=device.id, name="lo0.5000")
             ip4 = nb.ipam.ip_addresses.get(interface_id=lo5000.id, family=4)

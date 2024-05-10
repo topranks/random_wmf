@@ -1,0 +1,363 @@
+cmooney@wikilap:~$ cat codfw_cd.yaml
+devices:
+  spine:
+    - ssw1-d1-codfw
+    - ssw1-d8-codfw
+  leaf:
+    - lsw1-c1-codfw
+    - lsw1-c2-codfw
+    - lsw1-c3-codfw
+    - lsw1-c4-codfw
+    - lsw1-c5-codfw
+    - lsw1-c6-codfw
+    - lsw1-c7-codfw
+    - lsw1-d1-codfw
+    - lsw1-d2-codfw
+    - lsw1-d3-codfw
+    - lsw1-d4-codfw
+    - lsw1-d5-codfw
+    - lsw1-d6-codfw
+    - lsw1-d7-codfw
+    - lsw1-d8-codfw
+subnets:
+  underlay_links: 10.192.253.0/24
+  underlay_loopbacks: 10.192.252.0/24
+  overlay_loopback4: 10.192.255.0/24
+  overlay_loopback6: 2620:0:860:13f::/64
+  vlan4: 10.192.0.0/12
+  vlan6: 2620:0:860:100::/56
+vlans:
+  vlan_start: 2036
+skip_spine_int:
+  - 7
+
+cmooney@wikilap:~$ ./add_clos_nets.py -y codfw_cd.yaml -k <removed>
+
+SSW1-D1-CODFW
+    Creating interface lo0 on ssw1-d1-codfw... done.
+        Creating IP for lo0 on ssw1-d1-codfw from 10.192.252.0/24... 10.192.252.18/32.
+    Creating interface lo0.5000 on ssw1-d1-codfw... done.
+        Creating IP for lo0.5000 on ssw1-d1-codfw from 10.192.255.0/24... 10.192.255.18/32.
+        Creating IP for lo0.5000 on ssw1-d1-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::13/128.
+
+SSW1-D8-CODFW
+    Creating interface lo0 on ssw1-d8-codfw... done.
+        Creating IP for lo0 on ssw1-d8-codfw from 10.192.252.0/24... 10.192.252.19/32.
+    Creating interface lo0.5000 on ssw1-d8-codfw... done.
+        Creating IP for lo0.5000 on ssw1-d8-codfw from 10.192.255.0/24... 10.192.255.19/32.
+        Creating IP for lo0.5000 on ssw1-d8-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::14/128.
+
+LSW1-C1-CODFW
+    Adding link from lsw1-c1-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/0... done.
+    Assigning link subnet for lsw1-c1-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/0... 10.192.253.0/31.
+      Adding 10.192.253.0/31 to ssw1-d1-codfw et-0/0/0... done.
+      Adding 10.192.253.1/31 to lsw1-c1-codfw et-0/0/55... done.
+    Adding link from lsw1-c1-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/0... done.
+    Assigning link subnet for lsw1-c1-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/0... 10.192.253.2/31.
+      Adding 10.192.253.2/31 to ssw1-d8-codfw et-0/0/0... done.
+      Adding 10.192.253.3/31 to lsw1-c1-codfw et-0/0/54... done.
+    Creating vlan private1-c1-codfw with vid 2036... done.
+      Assigning IPv6 prefix for private1-c1-codfw...2620:0:860:100::/64.
+      Assigning IPv4 prefix for private1-c1-codfw...10.192.4.0/24.
+      Creating interface irb.2036 on lsw1-c1-codfw... done.
+        Creating GW for private1-c1-codfw from 2620:0:860:100::/64... done.
+        Creating GW for private1-c1-codfw from 10.192.4.0/24... done.
+    Creating interface lo0 on lsw1-c1-codfw... done.
+        Creating IP for lo0 on lsw1-c1-codfw from 10.192.252.0/24... 10.192.252.20/32.
+    Creating interface lo0.5000 on lsw1-c1-codfw... done.
+        Creating IP for lo0.5000 on lsw1-c1-codfw from 10.192.255.0/24... 10.192.255.20/32.
+        Creating IP for lo0.5000 on lsw1-c1-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::15/128.
+
+LSW1-C2-CODFW
+    Adding link from lsw1-c2-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/1... done.
+    Assigning link subnet for lsw1-c2-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/1... 10.192.253.60/31.
+      Adding 10.192.253.60/31 to ssw1-d1-codfw et-0/0/1... done.
+      Adding 10.192.253.61/31 to lsw1-c2-codfw et-0/0/55... done.
+    Adding link from lsw1-c2-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/1... done.
+    Assigning link subnet for lsw1-c2-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/1... 10.192.253.62/31.
+      Adding 10.192.253.62/31 to ssw1-d8-codfw et-0/0/1... done.
+      Adding 10.192.253.63/31 to lsw1-c2-codfw et-0/0/54... done.
+    Creating vlan private1-c2-codfw with vid 2037... done.
+      Assigning IPv6 prefix for private1-c2-codfw...2620:0:860:105::/64.
+      Assigning IPv4 prefix for private1-c2-codfw...10.192.26.0/24.
+      Creating interface irb.2037 on lsw1-c2-codfw... done.
+        Creating GW for private1-c2-codfw from 2620:0:860:105::/64... done.
+        Creating GW for private1-c2-codfw from 10.192.26.0/24... done.
+    Creating interface lo0 on lsw1-c2-codfw... done.
+        Creating IP for lo0 on lsw1-c2-codfw from 10.192.252.0/24... 10.192.252.21/32.
+    Creating interface lo0.5000 on lsw1-c2-codfw... done.
+        Creating IP for lo0.5000 on lsw1-c2-codfw from 10.192.255.0/24... 10.192.255.21/32.
+        Creating IP for lo0.5000 on lsw1-c2-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::16/128.
+
+LSW1-C3-CODFW
+    Adding link from lsw1-c3-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/2... done.
+    Assigning link subnet for lsw1-c3-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/2... 10.192.253.64/31.
+      Adding 10.192.253.64/31 to ssw1-d1-codfw et-0/0/2... done.
+      Adding 10.192.253.65/31 to lsw1-c3-codfw et-0/0/55... done.
+    Adding link from lsw1-c3-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/2... done.
+    Assigning link subnet for lsw1-c3-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/2... 10.192.253.66/31.
+      Adding 10.192.253.66/31 to ssw1-d8-codfw et-0/0/2... done.
+      Adding 10.192.253.67/31 to lsw1-c3-codfw et-0/0/54... done.
+    Creating vlan private1-c3-codfw with vid 2038... done.
+      Assigning IPv6 prefix for private1-c3-codfw...2620:0:860:114::/64.
+      Assigning IPv4 prefix for private1-c3-codfw...10.192.27.0/24.
+      Creating interface irb.2038 on lsw1-c3-codfw... done.
+        Creating GW for private1-c3-codfw from 2620:0:860:114::/64... done.
+        Creating GW for private1-c3-codfw from 10.192.27.0/24... done.
+    Creating interface lo0 on lsw1-c3-codfw... done.
+        Creating IP for lo0 on lsw1-c3-codfw from 10.192.252.0/24... 10.192.252.22/32.
+    Creating interface lo0.5000 on lsw1-c3-codfw... done.
+        Creating IP for lo0.5000 on lsw1-c3-codfw from 10.192.255.0/24... 10.192.255.22/32.
+        Creating IP for lo0.5000 on lsw1-c3-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::17/128.
+
+LSW1-C4-CODFW
+    Adding link from lsw1-c4-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/3... done.
+    Assigning link subnet for lsw1-c4-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/3... 10.192.253.68/31.
+      Adding 10.192.253.68/31 to ssw1-d1-codfw et-0/0/3... done.
+      Adding 10.192.253.69/31 to lsw1-c4-codfw et-0/0/55... done.
+    Adding link from lsw1-c4-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/3... done.
+    Assigning link subnet for lsw1-c4-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/3... 10.192.253.70/31.
+      Adding 10.192.253.70/31 to ssw1-d8-codfw et-0/0/3... done.
+      Adding 10.192.253.71/31 to lsw1-c4-codfw et-0/0/54... done.
+    Creating vlan private1-c4-codfw with vid 2039... done.
+      Assigning IPv6 prefix for private1-c4-codfw...2620:0:860:115::/64.
+      Assigning IPv4 prefix for private1-c4-codfw...10.192.28.0/24.
+      Creating interface irb.2039 on lsw1-c4-codfw... done.
+        Creating GW for private1-c4-codfw from 2620:0:860:115::/64... done.
+        Creating GW for private1-c4-codfw from 10.192.28.0/24... done.
+    Creating interface lo0 on lsw1-c4-codfw... done.
+        Creating IP for lo0 on lsw1-c4-codfw from 10.192.252.0/24... 10.192.252.23/32.
+    Creating interface lo0.5000 on lsw1-c4-codfw... done.
+        Creating IP for lo0.5000 on lsw1-c4-codfw from 10.192.255.0/24... 10.192.255.23/32.
+        Creating IP for lo0.5000 on lsw1-c4-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::18/128.
+
+LSW1-C5-CODFW
+    Adding link from lsw1-c5-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/4... done.
+    Assigning link subnet for lsw1-c5-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/4... 10.192.253.72/31.
+      Adding 10.192.253.72/31 to ssw1-d1-codfw et-0/0/4... done.
+      Adding 10.192.253.73/31 to lsw1-c5-codfw et-0/0/55... done.
+    Adding link from lsw1-c5-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/4... done.
+    Assigning link subnet for lsw1-c5-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/4... 10.192.253.74/31.
+      Adding 10.192.253.74/31 to ssw1-d8-codfw et-0/0/4... done.
+      Adding 10.192.253.75/31 to lsw1-c5-codfw et-0/0/54... done.
+    Creating vlan private1-c5-codfw with vid 2040... done.
+      Assigning IPv6 prefix for private1-c5-codfw...2620:0:860:116::/64.
+      Assigning IPv4 prefix for private1-c5-codfw...10.192.29.0/24.
+      Creating interface irb.2040 on lsw1-c5-codfw... done.
+        Creating GW for private1-c5-codfw from 2620:0:860:116::/64... done.
+        Creating GW for private1-c5-codfw from 10.192.29.0/24... done.
+    Creating interface lo0 on lsw1-c5-codfw... done.
+        Creating IP for lo0 on lsw1-c5-codfw from 10.192.252.0/24... 10.192.252.24/32.
+    Creating interface lo0.5000 on lsw1-c5-codfw... done.
+        Creating IP for lo0.5000 on lsw1-c5-codfw from 10.192.255.0/24... 10.192.255.24/32.
+        Creating IP for lo0.5000 on lsw1-c5-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::19/128.
+
+LSW1-C6-CODFW
+    Adding link from lsw1-c6-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/5... done.
+    Assigning link subnet for lsw1-c6-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/5... 10.192.253.76/31.
+      Adding 10.192.253.76/31 to ssw1-d1-codfw et-0/0/5... done.
+      Adding 10.192.253.77/31 to lsw1-c6-codfw et-0/0/55... done.
+    Adding link from lsw1-c6-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/5... done.
+    Assigning link subnet for lsw1-c6-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/5... 10.192.253.78/31.
+      Adding 10.192.253.78/31 to ssw1-d8-codfw et-0/0/5... done.
+      Adding 10.192.253.79/31 to lsw1-c6-codfw et-0/0/54... done.
+    Creating vlan private1-c6-codfw with vid 2041... done.
+      Assigning IPv6 prefix for private1-c6-codfw...2620:0:860:119::/64.
+      Assigning IPv4 prefix for private1-c6-codfw...10.192.30.0/24.
+      Creating interface irb.2041 on lsw1-c6-codfw... done.
+        Creating GW for private1-c6-codfw from 2620:0:860:119::/64... done.
+        Creating GW for private1-c6-codfw from 10.192.30.0/24... done.
+    Creating interface lo0 on lsw1-c6-codfw... done.
+        Creating IP for lo0 on lsw1-c6-codfw from 10.192.252.0/24... 10.192.252.25/32.
+    Creating interface lo0.5000 on lsw1-c6-codfw... done.
+        Creating IP for lo0.5000 on lsw1-c6-codfw from 10.192.255.0/24... 10.192.255.25/32.
+        Creating IP for lo0.5000 on lsw1-c6-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::1a/128.
+
+LSW1-C7-CODFW
+    Adding link from lsw1-c7-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/6... done.
+    Assigning link subnet for lsw1-c7-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/6... 10.192.253.80/31.
+      Adding 10.192.253.80/31 to ssw1-d1-codfw et-0/0/6... done.
+      Adding 10.192.253.81/31 to lsw1-c7-codfw et-0/0/55... done.
+    Adding link from lsw1-c7-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/6... done.
+    Assigning link subnet for lsw1-c7-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/6... 10.192.253.82/31.
+      Adding 10.192.253.82/31 to ssw1-d8-codfw et-0/0/6... done.
+      Adding 10.192.253.83/31 to lsw1-c7-codfw et-0/0/54... done.
+    Creating vlan private1-c7-codfw with vid 2042... done.
+      Assigning IPv6 prefix for private1-c7-codfw...2620:0:860:11a::/64.
+      Assigning IPv4 prefix for private1-c7-codfw...10.192.31.0/24.
+      Creating interface irb.2042 on lsw1-c7-codfw... done.
+        Creating GW for private1-c7-codfw from 2620:0:860:11a::/64... done.
+        Creating GW for private1-c7-codfw from 10.192.31.0/24... done.
+    Creating interface lo0 on lsw1-c7-codfw... done.
+        Creating IP for lo0 on lsw1-c7-codfw from 10.192.252.0/24... 10.192.252.26/32.
+    Creating interface lo0.5000 on lsw1-c7-codfw... done.
+        Creating IP for lo0.5000 on lsw1-c7-codfw from 10.192.255.0/24... 10.192.255.26/32.
+        Creating IP for lo0.5000 on lsw1-c7-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::1b/128.
+
+LSW1-D1-CODFW
+    Enabling lsw1-d1-codfw et-0/0/55 and setting MTU to 9192... done.
+    Adding link from lsw1-d1-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/8... done.
+    Assigning link subnet for lsw1-d1-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/8... 10.192.253.84/31.
+      Adding 10.192.253.84/31 to ssw1-d1-codfw et-0/0/8... done.
+      Adding 10.192.253.85/31 to lsw1-d1-codfw et-0/0/55... done.
+    Enabling lsw1-d1-codfw et-0/0/54 and setting MTU to 9192... done.
+    Adding link from lsw1-d1-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/8... done.
+    Assigning link subnet for lsw1-d1-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/8... 10.192.253.86/31.
+      Adding 10.192.253.86/31 to ssw1-d8-codfw et-0/0/8... done.
+      Adding 10.192.253.87/31 to lsw1-d1-codfw et-0/0/54... done.
+    Creating vlan private1-d1-codfw with vid 2043... done.
+      Assigning IPv6 prefix for private1-d1-codfw...2620:0:860:11b::/64.
+      Assigning IPv4 prefix for private1-d1-codfw...10.192.36.0/24.
+      Creating interface irb.2043 on lsw1-d1-codfw... done.
+        Creating GW for private1-d1-codfw from 2620:0:860:11b::/64... done.
+        Creating GW for private1-d1-codfw from 10.192.36.0/24... done.
+    Interface lo0 already exists on lsw1-d1-codfw... skipping.
+    Interface lo0.5000 already exists on lsw1-d1-codfw... skipping.
+
+LSW1-D2-CODFW
+    Adding link from lsw1-d2-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/9... done.
+    Assigning link subnet for lsw1-d2-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/9... 10.192.253.88/31.
+      Adding 10.192.253.88/31 to ssw1-d1-codfw et-0/0/9... done.
+      Adding 10.192.253.89/31 to lsw1-d2-codfw et-0/0/55... done.
+    Adding link from lsw1-d2-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/9... done.
+    Assigning link subnet for lsw1-d2-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/9... 10.192.253.90/31.
+      Adding 10.192.253.90/31 to ssw1-d8-codfw et-0/0/9... done.
+      Adding 10.192.253.91/31 to lsw1-d2-codfw et-0/0/54... done.
+    Creating vlan private1-d2-codfw with vid 2044... done.
+      Assigning IPv6 prefix for private1-d2-codfw...2620:0:860:11c::/64.
+      Assigning IPv4 prefix for private1-d2-codfw...10.192.37.0/24.
+      Creating interface irb.2044 on lsw1-d2-codfw... done.
+        Creating GW for private1-d2-codfw from 2620:0:860:11c::/64... done.
+        Creating GW for private1-d2-codfw from 10.192.37.0/24... done.
+    Creating interface lo0 on lsw1-d2-codfw... done.
+        Creating IP for lo0 on lsw1-d2-codfw from 10.192.252.0/24... 10.192.252.27/32.
+    Creating interface lo0.5000 on lsw1-d2-codfw... done.
+        Creating IP for lo0.5000 on lsw1-d2-codfw from 10.192.255.0/24... 10.192.255.27/32.
+        Creating IP for lo0.5000 on lsw1-d2-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::1c/128.
+
+LSW1-D3-CODFW
+    Adding link from lsw1-d3-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/10... done.
+    Assigning link subnet for lsw1-d3-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/10... 10.192.253.92/31.
+      Adding 10.192.253.92/31 to ssw1-d1-codfw et-0/0/10... done.
+      Adding 10.192.253.93/31 to lsw1-d3-codfw et-0/0/55... done.
+    Adding link from lsw1-d3-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/10... done.
+    Assigning link subnet for lsw1-d3-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/10... 10.192.253.94/31.
+      Adding 10.192.253.94/31 to ssw1-d8-codfw et-0/0/10... done.
+      Adding 10.192.253.95/31 to lsw1-d3-codfw et-0/0/54... done.
+    Creating vlan private1-d3-codfw with vid 2045... done.
+      Assigning IPv6 prefix for private1-d3-codfw...2620:0:860:11d::/64.
+      Assigning IPv4 prefix for private1-d3-codfw...10.192.38.0/24.
+      Creating interface irb.2045 on lsw1-d3-codfw... done.
+        Creating GW for private1-d3-codfw from 2620:0:860:11d::/64... done.
+        Creating GW for private1-d3-codfw from 10.192.38.0/24... done.
+    Creating interface lo0 on lsw1-d3-codfw... done.
+        Creating IP for lo0 on lsw1-d3-codfw from 10.192.252.0/24... 10.192.252.28/32.
+    Creating interface lo0.5000 on lsw1-d3-codfw... done.
+        Creating IP for lo0.5000 on lsw1-d3-codfw from 10.192.255.0/24... 10.192.255.28/32.
+        Creating IP for lo0.5000 on lsw1-d3-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::1d/128.
+
+LSW1-D4-CODFW
+    Adding link from lsw1-d4-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/11... done.
+    Assigning link subnet for lsw1-d4-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/11... 10.192.253.96/31.
+      Adding 10.192.253.96/31 to ssw1-d1-codfw et-0/0/11... done.
+      Adding 10.192.253.97/31 to lsw1-d4-codfw et-0/0/55... done.
+    Adding link from lsw1-d4-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/11... done.
+    Assigning link subnet for lsw1-d4-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/11... 10.192.253.98/31.
+      Adding 10.192.253.98/31 to ssw1-d8-codfw et-0/0/11... done.
+      Adding 10.192.253.99/31 to lsw1-d4-codfw et-0/0/54... done.
+    Creating vlan private1-d4-codfw with vid 2046... done.
+      Assigning IPv6 prefix for private1-d4-codfw...2620:0:860:11e::/64.
+      Assigning IPv4 prefix for private1-d4-codfw...10.192.39.0/24.
+      Creating interface irb.2046 on lsw1-d4-codfw... done.
+        Creating GW for private1-d4-codfw from 2620:0:860:11e::/64... done.
+        Creating GW for private1-d4-codfw from 10.192.39.0/24... done.
+    Creating interface lo0 on lsw1-d4-codfw... done.
+        Creating IP for lo0 on lsw1-d4-codfw from 10.192.252.0/24... 10.192.252.29/32.
+    Creating interface lo0.5000 on lsw1-d4-codfw... done.
+        Creating IP for lo0.5000 on lsw1-d4-codfw from 10.192.255.0/24... 10.192.255.29/32.
+        Creating IP for lo0.5000 on lsw1-d4-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::1e/128.
+
+LSW1-D5-CODFW
+    Adding link from lsw1-d5-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/12... done.
+    Assigning link subnet for lsw1-d5-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/12... 10.192.253.100/31.
+      Adding 10.192.253.100/31 to ssw1-d1-codfw et-0/0/12... done.
+      Adding 10.192.253.101/31 to lsw1-d5-codfw et-0/0/55... done.
+    Adding link from lsw1-d5-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/12... done.
+    Assigning link subnet for lsw1-d5-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/12... 10.192.253.102/31.
+      Adding 10.192.253.102/31 to ssw1-d8-codfw et-0/0/12... done.
+      Adding 10.192.253.103/31 to lsw1-d5-codfw et-0/0/54... done.
+    Creating vlan private1-d5-codfw with vid 2047... done.
+      Assigning IPv6 prefix for private1-d5-codfw...2620:0:860:11f::/64.
+      Assigning IPv4 prefix for private1-d5-codfw...10.192.40.0/24.
+      Creating interface irb.2047 on lsw1-d5-codfw... done.
+        Creating GW for private1-d5-codfw from 2620:0:860:11f::/64... done.
+        Creating GW for private1-d5-codfw from 10.192.40.0/24... done.
+    Creating interface lo0 on lsw1-d5-codfw... done.
+        Creating IP for lo0 on lsw1-d5-codfw from 10.192.252.0/24... 10.192.252.30/32.
+    Creating interface lo0.5000 on lsw1-d5-codfw... done.
+        Creating IP for lo0.5000 on lsw1-d5-codfw from 10.192.255.0/24... 10.192.255.30/32.
+        Creating IP for lo0.5000 on lsw1-d5-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::1f/128.
+
+LSW1-D6-CODFW
+    Adding link from lsw1-d6-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/13... done.
+    Assigning link subnet for lsw1-d6-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/13... 10.192.253.104/31.
+      Adding 10.192.253.104/31 to ssw1-d1-codfw et-0/0/13... done.
+      Adding 10.192.253.105/31 to lsw1-d6-codfw et-0/0/55... done.
+    Adding link from lsw1-d6-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/13... done.
+    Assigning link subnet for lsw1-d6-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/13... 10.192.253.106/31.
+      Adding 10.192.253.106/31 to ssw1-d8-codfw et-0/0/13... done.
+      Adding 10.192.253.107/31 to lsw1-d6-codfw et-0/0/54... done.
+    Creating vlan private1-d6-codfw with vid 2048... done.
+      Assigning IPv6 prefix for private1-d6-codfw...2620:0:860:120::/64.
+      Assigning IPv4 prefix for private1-d6-codfw...10.192.41.0/24.
+      Creating interface irb.2048 on lsw1-d6-codfw... done.
+        Creating GW for private1-d6-codfw from 2620:0:860:120::/64... done.
+        Creating GW for private1-d6-codfw from 10.192.41.0/24... done.
+    Creating interface lo0 on lsw1-d6-codfw... done.
+        Creating IP for lo0 on lsw1-d6-codfw from 10.192.252.0/24... 10.192.252.31/32.
+    Creating interface lo0.5000 on lsw1-d6-codfw... done.
+        Creating IP for lo0.5000 on lsw1-d6-codfw from 10.192.255.0/24... 10.192.255.31/32.
+        Creating IP for lo0.5000 on lsw1-d6-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::20/128.
+
+LSW1-D7-CODFW
+    Adding link from lsw1-d7-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/14... done.
+    Assigning link subnet for lsw1-d7-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/14... 10.192.253.108/31.
+      Adding 10.192.253.108/31 to ssw1-d1-codfw et-0/0/14... done.
+      Adding 10.192.253.109/31 to lsw1-d7-codfw et-0/0/55... done.
+    Adding link from lsw1-d7-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/14... done.
+    Assigning link subnet for lsw1-d7-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/14... 10.192.253.110/31.
+      Adding 10.192.253.110/31 to ssw1-d8-codfw et-0/0/14... done.
+      Adding 10.192.253.111/31 to lsw1-d7-codfw et-0/0/54... done.
+    Creating vlan private1-d7-codfw with vid 2049... done.
+      Assigning IPv6 prefix for private1-d7-codfw...2620:0:860:121::/64.
+      Assigning IPv4 prefix for private1-d7-codfw...10.192.42.0/24.
+      Creating interface irb.2049 on lsw1-d7-codfw... done.
+        Creating GW for private1-d7-codfw from 2620:0:860:121::/64... done.
+        Creating GW for private1-d7-codfw from 10.192.42.0/24... done.
+    Creating interface lo0 on lsw1-d7-codfw... done.
+        Creating IP for lo0 on lsw1-d7-codfw from 10.192.252.0/24... 10.192.252.32/32.
+    Creating interface lo0.5000 on lsw1-d7-codfw... done.
+        Creating IP for lo0.5000 on lsw1-d7-codfw from 10.192.255.0/24... 10.192.255.32/32.
+        Creating IP for lo0.5000 on lsw1-d7-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::21/128.
+
+LSW1-D8-CODFW
+    Adding link from lsw1-d8-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/15... done.
+    Assigning link subnet for lsw1-d8-codfw et-0/0/55 to ssw1-d1-codfw et-0/0/15... 10.192.253.112/31.
+      Adding 10.192.253.112/31 to ssw1-d1-codfw et-0/0/15... done.
+      Adding 10.192.253.113/31 to lsw1-d8-codfw et-0/0/55... done.
+    Adding link from lsw1-d8-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/15... done.
+    Assigning link subnet for lsw1-d8-codfw et-0/0/54 to ssw1-d8-codfw et-0/0/15... 10.192.253.114/31.
+      Adding 10.192.253.114/31 to ssw1-d8-codfw et-0/0/15... done.
+      Adding 10.192.253.115/31 to lsw1-d8-codfw et-0/0/54... done.
+    Creating vlan private1-d8-codfw with vid 2050... done.
+      Assigning IPv6 prefix for private1-d8-codfw...2620:0:860:122::/64.
+      Assigning IPv4 prefix for private1-d8-codfw...10.192.43.0/24.
+      Creating interface irb.2050 on lsw1-d8-codfw... done.
+        Creating GW for private1-d8-codfw from 2620:0:860:122::/64... done.
+        Creating GW for private1-d8-codfw from 10.192.43.0/24... done.
+    Creating interface lo0 on lsw1-d8-codfw... done.
+        Creating IP for lo0 on lsw1-d8-codfw from 10.192.252.0/24... 10.192.252.33/32.
+    Creating interface lo0.5000 on lsw1-d8-codfw... done.
+        Creating IP for lo0.5000 on lsw1-d8-codfw from 10.192.255.0/24... 10.192.255.33/32.
+        Creating IP for lo0.5000 on lsw1-d8-codfw from 2620:0:860:13f::/64... 2620:0:860:13f::22/128.
+

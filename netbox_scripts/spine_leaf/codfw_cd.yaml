@@ -1,0 +1,32 @@
+---
+devices:
+  spine:
+    - ssw1-d1-codfw
+    - ssw1-d8-codfw
+  leaf:
+    - lsw1-c1-codfw
+    - lsw1-c2-codfw
+    - lsw1-c3-codfw
+    - lsw1-c4-codfw
+    - lsw1-c5-codfw
+    - lsw1-c6-codfw
+    - lsw1-c7-codfw
+    - lsw1-d1-codfw
+    - lsw1-d2-codfw
+    - lsw1-d3-codfw
+    - lsw1-d4-codfw
+    - lsw1-d5-codfw
+    - lsw1-d6-codfw
+    - lsw1-d7-codfw
+    - lsw1-d8-codfw
+subnets:
+  underlay_links: 10.192.253.0/24
+  underlay_loopbacks: 10.192.252.0/24
+  overlay_loopback4: 10.192.255.0/24
+  overlay_loopback6: 2620:0:860:13f::/64
+  vlan4: 10.192.0.0/12
+  vlan6: 2620:0:860:100::/56
+vlans:
+  vlan_start: 2036
+skip_spine_int:
+  - 7
