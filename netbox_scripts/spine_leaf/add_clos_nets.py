@@ -116,7 +116,11 @@ def add_spine_link(spine, leaf, spine_port, leaf_port):
         together and adds the link, link subnet and attaches link IPs."""
 
     leaf_int = get_nb_int(leaf, f"et-0/0/{leaf_port}")
+    leaf_int.mtu = 9192
+    leaf_int.save()
     spine_int = get_nb_int(spine, f"et-0/0/{spine_port}")
+    spine_int.mtu = 9182
+    spine_int.save
 
     # Add connection between ports if needed
     if not leaf_int.connected_endpoint and not spine_int.connected_endpoint:
