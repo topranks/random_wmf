@@ -122,8 +122,7 @@ def add_spine_link(spine, leaf, spine_port, leaf_port):
     if not leaf_int.connected_endpoint and not spine_int.connected_endpoint:
         print(f"    Adding link from {leaf.name} et-0/0/{leaf_port} to {spine.name} et-0/0/{spine_port}...", end="")
         new_cable = nb.dcim.cables.create(termination_a_type="dcim.interface", termination_b_type="dcim.interface",
-                termination_a_id=spine_int.id, termination_b_id=leaf_int.id, color="ffeb3b", type="smf", status='planned',
-                label=f"changeme_{leaf_int.id}")
+                termination_a_id=spine_int.id, termination_b_id=leaf_int.id, color="ffeb3b", type="smf", status='planned')
         print(" done.")
     elif leaf_int.connected_endpoint and spine_int.connected_endpoint:
         # Quit if they are not connected to each other
