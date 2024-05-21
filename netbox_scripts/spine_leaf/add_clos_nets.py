@@ -214,7 +214,7 @@ def add_leaf_vlan(vlan_type, leaf):
     # Create vlan   
     vlan_id = get_next_vid(input_data['vlans']['vlan_start']) 
     print(f"    Creating vlan {vlan_name} with vid {vlan_id}...", end="")
-    new_vlan = nb.ipam.vlans.create(site=site.id, vid=vlan_id, name=vlan_name, group=vlan_group.id)
+    new_vlan = nb.ipam.vlans.create(site=site.id, vid=vlan_id, name=vlan_name, group=vlan_group.id, status="reserved")
     print(" done.")
 
     # Assign prefixes
