@@ -4,16 +4,25 @@ import argparse
 import pynetbox
 import os
 
-from pprint import pprint
+from pprintpp import pprint as pp
+
 import sys
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox-next.wikimedia.org")
+parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-k', '--key', help='API Token / Key', required=True, type=str)
 parser.add_argument('-d', '--directory', help='Path of directory with license files', required=True, type=str)
 args = parser.parse_args()
 
 def main():
+    """ Adds licence keys to netbox.  Source directory should contain files with 
+        naming convention: device - something.txt, for instance:
+        
+            lsw1-d8-codfw - license XH3723370208.txt
+            ssw1-d1-codfw - license AO09010009.txt
+
+    """    
+
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
     license_role = nb.dcim.inventory_item_roles.get(slug='license')
@@ -43,14 +52,15 @@ def main():
 
             licenses[serial] = {}
             licenses[serial]['feature'] = feature
-            licenses[serial]['filename'] = filename.rstrip(".txt")
+            licenses[serial]['filename'] = filename.split(" - ")[0]
             licenses[serial]['license_serial'] = license_serial
             licenses[serial]['license_key'] = license_key
+
 
     for device_serial, license_data in licenses.items():
         device = nb.dcim.devices.get(serial=device_serial)
         if not device:
-            print(f"{device_serial} - {license_data['filename']}")
+            print(f"Not found in Netbox: {device_serial} - {license_data['filename']}")
             continue
 
         print(device.name)
