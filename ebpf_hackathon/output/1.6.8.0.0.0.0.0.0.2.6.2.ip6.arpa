@@ -1,0 +1,4 @@
+; Delegation for 2620:0:861:cabe:1a9:51af:7212:63c0/122
+3.6.2.1.2.7.f.a.1.5.9.a.1.0.e.b.a.c IN    NS    ns0.k8s.wikimedia.org.
+3.6.2.1.2.7.f.a.1.5.9.a.1.0.e.b.a.c IN    NS    ns1.k8s.wikimedia.org.
+

@@ -1,0 +1,4 @@
+; Delegation for 192.168.0.0/24
+0                               IN    NS    ns0.k8s.wikimedia.org.
+0                               IN    NS    ns1.k8s.wikimedia.org.
+

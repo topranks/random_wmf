@@ -1,0 +1,4 @@
+; Delegation for 10.0.0.0/16
+0                               IN    NS    ns0.k8s.wikimedia.org.
+0                               IN    NS    ns1.k8s.wikimedia.org.
+

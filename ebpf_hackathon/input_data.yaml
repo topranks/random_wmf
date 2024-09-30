@@ -1,0 +1,20 @@
+---
+ns_zone: k8s.wikimedia.org
+ns_parent_zone: wikimedia.org
+parent_zones:
+  - 168.192.in-addr.arpa
+  - 10.in-addr.arpa
+  - 1.6.8.0.0.0.0.0.0.2.6.2.ip6.arpa
+  - 0.7.b.8.6.b.b.0.1.0.0.2.ip6.arpa
+  - 16.172.in-addr.arpa
+name_servers:
+  - 10.0.0.1
+  - 10.0.0.2
+cidrs:
+  - 192.168.0.0/24
+  - 2001:bb6:8b70:9e00::/64
+  - 2001:bb6:8b70:9e01::/64
+  - 172.16.0.8/29
+  - 172.16.129.0/24
+  - 2620:0:861:cabe:1a9:51af:7212:63c0/122
+  - 10.0.0.0/16

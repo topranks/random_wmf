@@ -1,0 +1,2 @@
+ns0.k8s.wikimedia.org.          IN    A      10.0.0.1
+ns1.k8s.wikimedia.org.          IN    A      10.0.0.2

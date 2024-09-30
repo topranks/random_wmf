@@ -1,0 +1,7 @@
+; Delegation for 2001:bb6:8b70:9e00::/64
+0.0.e.9                         IN    NS    ns0.k8s.wikimedia.org.
+0.0.e.9                         IN    NS    ns1.k8s.wikimedia.org.
+; Delegation for 2001:bb6:8b70:9e01::/64
+1.0.e.9                         IN    NS    ns0.k8s.wikimedia.org.
+1.0.e.9                         IN    NS    ns1.k8s.wikimedia.org.
+
