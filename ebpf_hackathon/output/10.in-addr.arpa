@@ -1,4 +1,16 @@
 ; Delegation for 10.0.0.0/16
 0                               IN    NS    ns0.k8s.wikimedia.org.
 0                               IN    NS    ns1.k8s.wikimedia.org.
+; Delegation for 10.87.120.0/24
+120.87                          IN    NS    ns0.k8s.wikimedia.org.
+120.87                          IN    NS    ns1.k8s.wikimedia.org.
+; Delegation for 10.87.121.0/24
+121.87                          IN    NS    ns0.k8s.wikimedia.org.
+121.87                          IN    NS    ns1.k8s.wikimedia.org.
+; Delegation for 10.87.122.0/24
+122.87                          IN    NS    ns0.k8s.wikimedia.org.
+122.87                          IN    NS    ns1.k8s.wikimedia.org.
+; Delegation for 10.87.123.0/24
+123.87                          IN    NS    ns0.k8s.wikimedia.org.
+123.87                          IN    NS    ns1.k8s.wikimedia.org.
 

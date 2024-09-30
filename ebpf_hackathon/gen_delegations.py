@@ -38,38 +38,48 @@ def main():
                     'subnet': net_addr,
                     'zone': ptr_zone.replace(f".{parent_zone}", "")
                 })
-            elif net_addr.prefixlen > 24:
-                # We can't just delegate the zone so we need to follow RFC2317 format
+            else:
+                # The subnet doesn't fit neatly into a reverse zone
+                # Find the next largest subnet that is on a dot boundary and the reverse for it
+                closest_subnet = ".".join(cidr.split(".")[0:net_addr.prefixlen//8])
+                added_octets = 0
+                while len(closest_subnet.split(".")) < 4:
+                    closest_subnet += ".0"
+                    added_octets += 1
+                closest_rev_zone = ".".join(ipaddress.ip_address(closest_subnet).reverse_pointer.split(".")[added_octets:])
+                # Compare and store the difference from this next largest subnet and the actual parent zone where we add entries
+                parent_zone_diff = []
+                if closest_rev_zone != parent_zone:
+                    parent_zone_diff.append('')
+                    parent_zone_diff += closest_rev_zone.replace(f".{parent_zone}", "").split(".")
+            
+                if net_addr.prefixlen > 24:
+                    # We need to follow RFC2317 format to add reverses for subnets smaller than /24
+                    subnet_lastoct = str(net_addr.network_address).split(".")[-1]
+                    zone = f"{subnet_lastoct}-{net_addr.prefixlen}{'.'.join(parent_zone_diff)}"
+                    ptr_delegations[parent_zone].append({
+                        'subnet': net_addr,
+                        'zone': zone
+                    })
+                    # Add CNAME records to point each IP in the subnet at an entry in the new zone
+                    i = 0
+                    while i < net_addr.num_addresses:
+                        last_octet = i + int(str(net_addr.network_address).split(".")[-1])
+                        cnames[parent_zone].append((f"{last_octet}{'.'.join(parent_zone_diff)}", f"{last_octet}.{zone}.{parent_zone}"))
+                        i += 1
 
-                # This function is perhaps more complex than it needs to be, to support 
-                # a parent zone of e.g. 172.16.0.0/16, with a direct delegation 
-                # of 172.16.126.8/29, rather than the more typical case where a zone 
-                # for 172.16.126.0/24 exists as the parent.
-
-                # Get the reverse zone for the parent /24
-                rev_24 = ".".join(cidr.split(".")[0:3]) + ".0"
-                zone_24 = ".".join(ipaddress.ip_address(rev_24).reverse_pointer.split(".")[1:])
-                # Find how this relates to the actual parent zone we are dealing with
-                relative_zone = zone_24.replace(f"{parent_zone}", "")
-                if relative_zone:
-                    relative_zone = "-" + relative_zone.rstrip(".")
-
-                subnet_lastoct = str(net_addr.network_address).split(".")[-1]
-                zone = f"{subnet_lastoct}{relative_zone}-{net_addr.prefixlen}"
-
-                ptr_delegations[parent_zone].append({
-                    'subnet': net_addr,
-                    'zone': zone
-                })
-                i = 0
-                while i < net_addr.num_addresses:
-                    last_octet = i + int(str(net_addr.network_address).split(".")[-1])
-                    cnames[parent_zone].append((f"{last_octet}{relative_zone.replace('-', '.')}", f"{last_octet}.{zone}.{ptr_zone}"))
-                    i += 1
-            # TODO add support for networks not at the dot boundary, but larger than a /24
-            # e.g. /22, /21, /14, /9 etc etc
+                else:
+                    # We need to delegate multiple /24 zones to cover the subnet
+                    for network in net_addr.subnets(new_prefix=24):
+                        network_reverse = network.network_address.reverse_pointer.lstrip("0.")
+                        zone = network_reverse.replace(f".{closest_rev_zone}", "") + ".".join(parent_zone_diff)
+                        ptr_delegations[parent_zone].append({
+                            'subnet': network,
+                            'zone': zone
+                        })
 
         elif net_addr.version == 6:
+            # V6 is relatively easier as we always subnet on a nibble/dot boundary
             ptr_zone = '.'.join(net_addr.network_address.reverse_pointer.split('.')[32-(net_addr.prefixlen//4):])
             parent_zone = get_parent_zone(ptr_zone, input_data['parent_zones'])
             ptr_delegations[parent_zone].append({
