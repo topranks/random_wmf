@@ -39,6 +39,13 @@ def main():
                     'zone': ptr_zone.replace(f".{parent_zone}", "")
                 })
             elif net_addr.prefixlen > 24:
+                # We can't just delegate the zone so we need to follow RFC2317 format
+
+                # This function is perhaps more complex than it needs to be, to support 
+                # a parent zone of e.g. 172.16.0.0/16, with a direct delegation 
+                # of 172.16.126.8/29, rather than the more typical case where a zone 
+                # for 172.16.126.0/24 exists as the parent.
+
                 # Get the reverse zone for the parent /24
                 rev_24 = ".".join(cidr.split(".")[0:3]) + ".0"
                 zone_24 = ".".join(ipaddress.ip_address(rev_24).reverse_pointer.split(".")[1:])
@@ -59,6 +66,8 @@ def main():
                     last_octet = i + int(str(net_addr.network_address).split(".")[-1])
                     cnames[parent_zone].append((f"{last_octet}{relative_zone.replace('-', '.')}", f"{last_octet}.{zone}.{ptr_zone}"))
                     i += 1
+            # TODO add support for networks not at the dot boundary, but larger than a /24
+            # e.g. /22, /21, /14, /9 etc etc
 
         elif net_addr.version == 6:
             ptr_zone = '.'.join(net_addr.network_address.reverse_pointer.split('.')[32-(net_addr.prefixlen//4):])
