@@ -8,8 +8,7 @@ def main():
     with open('input_data.yaml', 'r') as input_file:
         input_data = yaml.safe_load(input_file.read())
 
-    zone_lines = []
-
+    # Generate the A/AAAA name for each NS server IP passed
     dns_servers = []
     i=0
     for dns_ip in input_data['name_servers']:
@@ -19,12 +18,14 @@ def main():
         })
         i += 1
 
+    # Create dicts to hold the zone delegations and cnames for each of the parent zones
     cnames = {}
     ptr_delegations = {}
     for parent_zone in input_data['parent_zones']:
         cnames[parent_zone] = []
         ptr_delegations[parent_zone] = []
 
+    # Parse the CIDR networks and add the required zones and cnames to these dicts
     for cidr in input_data['cidrs']:
         net_addr = ipaddress.ip_network(cidr)
         if net_addr.version == 4:
