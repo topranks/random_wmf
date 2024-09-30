@@ -29,7 +29,7 @@ def main():
     for cidr in input_data['cidrs']:
         net_addr = ipaddress.ip_network(cidr)
         if net_addr.version == 4:
-            octets = 4 - int((net_addr.prefixlen - net_addr.prefixlen % 8) / 8)
+            octets = 4 - ((net_addr.prefixlen - net_addr.prefixlen % 8) // 8)
             ptr_zone = '.'.join(net_addr[0].reverse_pointer.split('.')[octets:])
             parent_zone = get_parent_zone(ptr_zone, input_data['parent_zones'])
             if net_addr.prefixlen in (24, 16, 8):
@@ -38,17 +38,26 @@ def main():
                     'subnet': net_addr,
                     'zone': ptr_zone.replace(f".{parent_zone}", "")
                 })
-            else:
-                # We need to use RFC2317 format
-                subnet_zone = f"{str(net_addr.network_address).split('.')[-1]}-{net_addr.prefixlen}"
+            elif net_addr.prefixlen > 24:
+                # Get the reverse zone for the parent /24
+                rev_24 = ".".join(cidr.split(".")[0:3]) + ".0"
+                zone_24 = ".".join(ipaddress.ip_address(rev_24).reverse_pointer.split(".")[1:])
+                # Find how this relates to the actual parent zone we are dealing with
+                relative_zone = zone_24.replace(f"{parent_zone}", "")
+                if relative_zone:
+                    relative_zone = "-" + relative_zone.rstrip(".")
+
+                subnet_lastoct = str(net_addr.network_address).split(".")[-1]
+                zone = f"{subnet_lastoct}{relative_zone}-{net_addr.prefixlen}"
+
                 ptr_delegations[parent_zone].append({
                     'subnet': net_addr,
-                    'zone': subnet_zone
+                    'zone': zone
                 })
                 i = 0
                 while i < net_addr.num_addresses:
                     last_octet = i + int(str(net_addr.network_address).split(".")[-1])
-                    cnames[parent_zone].append((last_octet, f"{last_octet}.{subnet_zone}.{ptr_zone}"))
+                    cnames[parent_zone].append((f"{last_octet}{relative_zone.replace('-', '.')}", f"{last_octet}.{zone}.{ptr_zone}"))
                     i += 1
 
         elif net_addr.version == 6:
