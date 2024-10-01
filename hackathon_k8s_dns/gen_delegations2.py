@@ -34,10 +34,8 @@ def main():
                 delegate_networks = [network]
 
             for delegate_network in delegate_networks:
-                # Find the zone it should go in
                 zone_name = get_zone(delegate_network, reverse_zones)
                 zone_label = get_zone_label(delegate_network, zone_name)
-                # Create the entries to go into the zone file
                 zonefile_content[zone_name].append(f"; {cluster_name} {delegate_network}")
                 for name_server in cluster_data['name_servers']:
                     zonefile_content[zone_name].append(f"{zone_label:<15} IN    NS    {name_server}.")
@@ -46,6 +44,7 @@ def main():
 
 
 def write_entries(zonefile_content):
+    """ Writes the output files to disk """
     Path("output").mkdir(exist_ok=True)
     for zone_name, zone_entries in zonefile_content.items():
         if zone_entries:
@@ -55,6 +54,7 @@ def write_entries(zonefile_content):
 
 
 def get_zone(ip_network, reverse_zones):
+    """ Gets zone name entries for ip_network should go in """
     for zone_network, zone_name in reverse_zones.items():
         if zone_network.version != ip_network.version:
             continue
@@ -63,7 +63,7 @@ def get_zone(ip_network, reverse_zones):
 
 
 def get_zone_label(delegate_network, zone_name):
-    # Returns the label to use for the NS entry within the given zone file
+    """ Gets the label to use for the NS entry within the given zone file """
     delegate_full_reverse = delegate_network.network_address.reverse_pointer.split(".")
     if delegate_network.version == 4:
         # We have up to 4 octets, each octet represents 8 bits
