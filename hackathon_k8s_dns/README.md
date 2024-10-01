@@ -9,11 +9,11 @@ used by our kubernetes pods to the control-plane nodes of each cluster
 
 There are two input files used:
 
-dns_k8s_reverse_delegation.yaml: This file needs to be built from the 
+`dns_k8s_reverse_delegation.yaml`: This file needs to be built from the 
 data in `hieradata/common/kubernetes.yaml`, exporting the 'cluster_cidr' 
 and 'control_plane_nodes' information for each cluster.
 
-dns_reverse_zones.yaml: This file contains a dict, keyed by an IP subnet,
+`dns_reverse_zones.yaml`: This file contains a dict, keyed by an IP subnet,
 with values representing the name of the zone file on our authdns servers 
 for it.  It is used to find what zone the given NS records need to be 
 placed for each subnet used by k8s.  This data is not already in hiera so 
