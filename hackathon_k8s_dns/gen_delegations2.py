@@ -13,6 +13,7 @@ def main():
     with open('dns_reverse_zones.yaml', 'r') as myfile:
         reverse_zones_data = yaml.safe_load(myfile.read())
 
+    # Build dict from the reverse_zone_data keyed by ipaddress.ip_network objects
     reverse_zones = {}
     for ip_prefix, zone_name in reverse_zones_data.items():
         ip_network = ipaddress.ip_network(ip_prefix)
@@ -26,12 +27,12 @@ def main():
     for cluster_name, cluster_data in k8s_clusters.items():
         for network_str in cluster_data['networks']:
             network = ipaddress.ip_network(network_str)
-            if network.version == 4:
-                # IPv4 subnets are not always a /24 at the dotted decimal boundary
-                # NOTE: Below assumes networks are smaller than a /16 so we always delegate as /24s
-                delegate_networks = list(network.subnets(new_prefix=24))
+            if network.version == 4 and network.prefixlen not in (8, 16, 24):
+                # IPv4 subnet is not at a dotted decimal boundary, break into multiple
+                closest_boundary = network.prefixlen + (8 - (network.prefixlen % 8))
+                delegate_networks = list(network.subnets(new_prefix=closest_boundary))
             else:
-                # v6 networks are always sub-divided at nibble boundary so no sub-division required
+                # network is already at an octet or nibble boundary so no sub-division required
                 delegate_networks = [network]
 
             for delegate_network in delegate_networks:
