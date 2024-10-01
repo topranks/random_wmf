@@ -11,11 +11,11 @@ def main():
     with open('dns_reverse_zones.yaml', 'r') as myfile:
         reverse_zones_data = yaml.safe_load(myfile.read())
 
-    # Build dict from the reverse_zone_data keyed by ipaddress.ip_network objects
+    # Build new dict from the reverse_zone_data with ipaddress.ip_network objects
     reverse_zones = {}
-    for ip_prefix, zone_name in reverse_zones_data.items():
-        ip_network = ipaddress.ip_network(ip_prefix)
-        reverse_zones[ip_network] = zone_name
+    for network_str, zone_name in reverse_zones_data.items():
+        network = ipaddress.ip_network(network_str)
+        reverse_zones[network] = zone_name
 
     # Dict to store the lines that go into each zone file
     zonefile_content = {}
