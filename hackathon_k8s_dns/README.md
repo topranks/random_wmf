@@ -20,7 +20,7 @@ placed for each subnet used by k8s.  This data is not already in hiera so
 we would need to add it, it's also not in Netbox exactly - as zones are cut 
 at octet/nibble boundaries and the prefixes in netbox can be larger/smaller.
 
-Taking these two input files we can run the 'generate_delegations2.py' 
+Taking these two input files we can run the `generate_delegations2.py` 
 script to parse them and generate the output shown in the 'output' directory.
 
 ## Next-steps
