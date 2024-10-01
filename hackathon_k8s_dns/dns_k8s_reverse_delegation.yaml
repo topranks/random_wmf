@@ -1,0 +1,68 @@
+---
+aux-k8s-eqiad:
+  name_servers:
+  - aux-k8s-ctrl1001.eqiad.wmnet
+  - aux-k8s-ctrl1002.eqiad.wmnet
+  networks:
+  - 10.67.80.0/21
+  - 2620:0:861:305::/64
+codfw:
+  name_servers:
+  - wikikube-ctrl2001.codfw.wmnet
+  - wikikube-ctrl2002.codfw.wmnet
+  - wikikube-ctrl2003.codfw.wmnet
+  networks:
+  - 10.194.128.0/18
+  - 2620:0:860:cabe::/64
+dse-k8s-eqiad:
+  name_servers:
+  - dse-k8s-ctrl1001.eqiad.wmnet
+  - dse-k8s-ctrl1002.eqiad.wmnet
+  networks:
+  - 10.67.24.0/21
+  - 2620:0:861:302::/64
+eqiad:
+  name_servers:
+  - wikikube-ctrl1001.eqiad.wmnet
+  - wikikube-ctrl1002.eqiad.wmnet
+  - wikikube-ctrl1003.eqiad.wmnet
+  networks:
+  - 10.67.128.0/18
+  - 2620:0:861:cabe::/64
+ml-serve-codfw:
+  name_servers:
+  - ml-serve-ctrl2001.codfw.wmnet
+  - ml-serve-ctrl2002.codfw.wmnet
+  networks:
+  - 10.194.16.0/21
+  - 2620:0:860:300::/64
+ml-serve-eqiad:
+  name_servers:
+  - ml-serve-ctrl1001.eqiad.wmnet
+  - ml-serve-ctrl1002.eqiad.wmnet
+  networks:
+  - 10.67.16.0/21
+  - 2620:0:861:300::/64
+ml-staging-codfw:
+  name_servers:
+  - ml-staging-ctrl2001.codfw.wmnet
+  - ml-staging-ctrl2002.codfw.wmnet
+  networks:
+  - 10.194.61.0/24
+  - 2620:0:860:302::/64
+staging-codfw:
+  name_servers:
+  - kubestagemaster2003.codfw.wmnet
+  - kubestagemaster2004.codfw.wmnet
+  - kubestagemaster2005.codfw.wmnet
+  networks:
+  - 10.192.75.0/24
+  - 2620:0:860:babe::/64
+staging-eqiad:
+  name_servers:
+  - kubestagemaster1003.eqiad.wmnet
+  - kubestagemaster1004.eqiad.wmnet
+  - kubestagemaster1005.eqiad.wmnet
+  networks:
+  - 10.64.75.0/24
+  - 2620:0:861:babe::/64
