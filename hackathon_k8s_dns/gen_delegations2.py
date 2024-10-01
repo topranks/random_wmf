@@ -4,8 +4,6 @@ import yaml
 import ipaddress
 from pathlib import Path
 
-from pprintpp import pprint as pp
-
 def main():
     with open('dns_k8s_reverse_delegation.yaml', 'r') as myfile:
         k8s_clusters = yaml.safe_load(myfile.read())
