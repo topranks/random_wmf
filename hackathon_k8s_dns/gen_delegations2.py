@@ -54,7 +54,7 @@ def write_entries(zonefile_content):
 
 
 def get_zone(ip_network, reverse_zones):
-    """ Gets zone name entries for ip_network should go in """
+    """ Gets zone name reverse records for a given IP subnet should go in """
     for zone_network, zone_name in reverse_zones.items():
         if zone_network.version != ip_network.version:
             continue
