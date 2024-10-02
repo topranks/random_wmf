@@ -12,15 +12,12 @@ def main():
         reverse_zones_data = yaml.safe_load(myfile.read())
 
     # Build new dict from the reverse_zone_data with ipaddress.ip_network objects
-    reverse_zones = {}
-    for network_str, zone_name in reverse_zones_data.items():
-        network = ipaddress.ip_network(network_str)
-        reverse_zones[network] = zone_name
+    reverse_zones = {
+        ipaddress.ip_network(network_str): zone_name for network_str, zone_name in reverse_zones_data.items()
+    }
 
     # Dict to store the lines that go into each zone file
-    zonefile_content = {}
-    for reverse_zone in reverse_zones.values():
-        zonefile_content[reverse_zone] = []
+    zonefile_content = {reverse_zone: [] for reverse_zone in reverse_zones.values()}
 
     for cluster_name, cluster_data in k8s_clusters.items():
         for network_str in cluster_data['networks']:
@@ -49,8 +46,7 @@ def write_entries(zonefile_content):
     for zone_name, zone_entries in zonefile_content.items():
         if zone_entries:
             with open(f'output/{zone_name}', 'w') as outfile:
-                for zone_entry in zone_entries:
-                    outfile.write(f"{zone_entry}\n")
+                outfile.writelines(f"{zone_entry}\n" for zone_entry in zone_entries)
 
 
 def get_zone(ip_network, reverse_zones):
