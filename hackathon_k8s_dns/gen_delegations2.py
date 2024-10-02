@@ -7,9 +7,9 @@ from pathlib import Path
 def main():
     with open('dns_reverse_zones.yaml', 'r') as myfile:
         zone_data = yaml.safe_load(myfile.read())
-    # Build dict from reverse_zone_data using ipaddress.ip_network objects
+    # Build dict from zone_data using ipaddress.ip_network objects
     reverse_zones = {ipaddress.ip_network(pfx): zone for pfx, zone in zone_data.items()}
-    # Dict with empty list for each zone to store the records we'll create
+    # Create dict keyed by zone name with empty list to hold records for each
     zonefile_content = {reverse_zone: [] for reverse_zone in reverse_zones.values()}
 
     with open('dns_k8s_reverse_delegation.yaml', 'r') as myfile:
