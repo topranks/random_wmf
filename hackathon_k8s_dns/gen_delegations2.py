@@ -5,20 +5,15 @@ import ipaddress
 from pathlib import Path
 
 def main():
-    with open('dns_k8s_reverse_delegation.yaml', 'r') as myfile:
-        k8s_clusters = yaml.safe_load(myfile.read())
-
     with open('dns_reverse_zones.yaml', 'r') as myfile:
-        reverse_zones_data = yaml.safe_load(myfile.read())
-
-    # Build new dict from the reverse_zone_data with ipaddress.ip_network objects
-    reverse_zones = {
-        ipaddress.ip_network(network_str): zone_name for network_str, zone_name in reverse_zones_data.items()
-    }
-
-    # Dict to store the lines that go into each zone file
+        zone_data = yaml.safe_load(myfile.read())
+    # Build dict from reverse_zone_data using ipaddress.ip_network objects
+    reverse_zones = {ipaddress.ip_network(pfx): zone for pfx, zone in zone_data.items()}
+    # Dict with empty list for each zone to store the records we'll create
     zonefile_content = {reverse_zone: [] for reverse_zone in reverse_zones.values()}
 
+    with open('dns_k8s_reverse_delegation.yaml', 'r') as myfile:
+        k8s_clusters = yaml.safe_load(myfile.read())
     for cluster_name, cluster_data in k8s_clusters.items():
         for network_str in cluster_data['networks']:
             network = ipaddress.ip_network(network_str)
