@@ -33,7 +33,7 @@ iface private inet static
 
 {% for vlan in tagged_vlans %}
 iface {{ vlan.name.split('-')[0].rstrip('1') }} inet manual
-    pre-up ip link add name {{ vlan.vid }} link {{ physical_int }} type vlan {{ vlan.vid }}
+    pre-up ip link add name {{ vlan.vid }} link {{ physical_int }} type vlan id {{ vlan.vid }}
     post-down ip link delete dev {{ vlan.vid }} type vlan
     bridge_ports   {{ vlan.vid }}
     bridge_stp     off
