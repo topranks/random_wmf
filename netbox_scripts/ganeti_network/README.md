@@ -44,7 +44,7 @@ iface private inet static
 
 
 iface public inet manual
-    pre-up ip link add name 1001 link enp175s0f0np0 type vlan 1001
+    pre-up ip link add name 1001 link enp175s0f0np0 type vlan id 1001
     post-down ip link delete dev 1001 type vlan
     bridge_ports   1001
     bridge_stp     off
@@ -53,7 +53,7 @@ iface public inet manual
     up sysctl net.ipv6.conf.public.accept_ra=0
 
 iface analytics inet manual
-    pre-up ip link add name 1030 link enp175s0f0np0 type vlan 1030
+    pre-up ip link add name 1030 link enp175s0f0np0 type vlan id 1030
     post-down ip link delete dev 1030 type vlan
     bridge_ports   1030
     bridge_stp     off
