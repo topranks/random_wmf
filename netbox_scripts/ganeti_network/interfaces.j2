@@ -29,6 +29,7 @@ iface private inet static
     bridge_maxwait  0
     bridge_fd       0
 
+    up ip token set {{ ip6_token }} dev private
     up ip addr add {{ primary_ip6 }} dev private
 
 {% for vlan in tagged_vlans %}

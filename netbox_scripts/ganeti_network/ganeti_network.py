@@ -66,6 +66,7 @@ def main():
                              bridge_names = ['private'] + [vlan.name.split('-')[0].rstrip('1') for vlan in tagged_vlans],
                              primary_ip4 = host.primary_ip4,
                              primary_ip6 = host.primary_ip6,
+                             ip6_token = f"::{':'.join(str(host.primary_ip6).split('/')[0].split(':')[-4:])}",
                              v4_gateway = ipaddress.ip_interface(host.primary_ip4).network[1],
                              dns_search = f"{host.site.slug}.wmnet",
                              physical_int = physical_int,
