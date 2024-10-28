@@ -40,6 +40,7 @@ iface private inet static
     bridge_maxwait  0
     bridge_fd       0
 
+    up ip token set ::10:64:0:84 dev private
     up ip addr add 2620:0:861:101:10:64:0:84/64 dev private
 
 
