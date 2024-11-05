@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-k', '--key', help='API Token / Key', type=str, default='')
 parser.add_argument('--host', help='Host to check', required=True, type=str)
+parser.add_argument('--verbose', help='Also print the generated config', default=False)
 args = parser.parse_args()
 
 def main():
@@ -71,9 +72,18 @@ def main():
                              dns_search = f"{host.site.slug}.wmnet",
                              physical_int = physical_int,
                              tagged_vlans = tagged_vlans)
-    print(output)
+
+    filename = f"{args.host}.txt"
+    with open(filename, 'w') as f:
+        f.write(output)
+    if args.verbose:
+        print("*******************************************************\n")
+        print(output)
+        print("\n*******************************************************")
+    else:
+        print(f'The /etc/network/interfaces config has been written to {filename}')
     if nb_changes:
-        print("\n\nNOTE: Netbox vlan settings were updated, please run sre.network.configure-switch-interfaces cookbook.")
+        print("NOTE: Netbox vlan settings were updated, please run sre.network.configure-switch-interfaces cookbook.")
 
 
 def get_switch_int(nb_host):
