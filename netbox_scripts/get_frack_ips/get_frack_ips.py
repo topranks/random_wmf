@@ -33,6 +33,7 @@ def main():
             int_ip = nb.ipam.ip_addresses.get(interface_id=bond_int.id)
             if int_ip == None:
                 print(f"ERROR: {host} is in Netbox but there is no IP on interface bond0.")
+                continue
             
             frack_data[host.name] = {}
             frack_data[host.name]['macaddress'] = bond_int.mac_address
