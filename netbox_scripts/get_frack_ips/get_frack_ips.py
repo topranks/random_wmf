@@ -29,7 +29,6 @@ def main():
             if bond_int.mac_address == None:
                 print(f"Skipping {host} as no MAC address is configured on bond0.")
                 continue
-    
             int_ip = nb.ipam.ip_addresses.get(interface_id=bond_int.id)
             if int_ip == None:
                 print(f"ERROR: {host} is in Netbox but there is no IP on interface bond0.")
