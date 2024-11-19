@@ -2,7 +2,6 @@
 
 import argparse
 import pynetbox
-from getpass import getpass
 import yaml
 
 parser = argparse.ArgumentParser()

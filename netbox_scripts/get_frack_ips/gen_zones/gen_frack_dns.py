@@ -2,7 +2,6 @@
 
 import argparse
 import pynetbox
-from getpass import getpass
 import ipaddress
 from pathlib import Path
 
@@ -11,7 +10,7 @@ parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=s
 parser.add_argument('-k', '--key', help='API Token / Key', type=str, default='')
 args = parser.parse_args()
 
-# Dict to store data we grab from netbox
+# Definition of "zones" to place records in and the type of record each holds
 zone_data = {
     '10.in-addr.arpa': { 'records': {}, 'type': 'PTR' },
     'frack.eqiad.wmnet': { 'records': {}, 'type': 'A' },
@@ -23,15 +22,6 @@ zone_data = {
 def main():
     nb_url = "https://{}".format(args.netbox)
     nb = pynetbox.api(nb_url, token=args.key)
-
-    # Dict to store data we grab from netbox
-    zone_data = {
-        '10.in-addr.arpa': { 'records': {}, 'type': 'PTR' },
-        'frack.eqiad.wmnet': { 'records': {}, 'type': 'A' },
-        'mgmt.frack.eqiad.wmnet': { 'records': {}, 'type': 'A' },
-        'frack.codfw.wmnet': { 'records': {}, 'type': 'A' },
-        'mgmt.frack.codfw.wmnet': { 'records': {}, 'type': 'A' }
-    }
 
     # Get the fr-tech vlans and from there get each attached subnet
     frack_vlans = nb.ipam.vlans.filter(tenant='fr-tech')
