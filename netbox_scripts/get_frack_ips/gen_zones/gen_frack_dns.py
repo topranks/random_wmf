@@ -42,10 +42,9 @@ def main():
     # Write to output files
     Path("output").mkdir(exist_ok=True)
     for zone_name, zone_info in zone_data.items():
-        record_type = zone_info['type']
         with open(f'output/{zone_name}', 'w') as zone_file:
             for dns_label, dns_record in zone_info['records'].items():
-                zone_file.write(f"{dns_label:23} IN    {record_type:3}     {dns_record}\n")
+                zone_file.write(f"{dns_label:23} IN    {zone_info['type']:3}     {dns_record}\n")
 
 
 def get_record_data(dns_name):
