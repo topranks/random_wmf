@@ -75,6 +75,8 @@ def main():
 
         ospf_data = ospf_ints(junos_dev).get()
         for ospf_int in ospf_data:
+            if ospf_int.int_type == "Down":
+                problems.append(f"{ospf_int.interface} Interface DOWN")
             if ospf_int.int_type == "PtToPt":
                 if int(ospf_int.neighbors) < 1:
                     problems.append(f"{ospf_int.interface} OSPF DOWN")
