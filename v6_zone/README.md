@@ -1,8 +1,8 @@
 
-# gdnsd zone file 'INCLUDE' generator for Netbox-generated IPv6 PTR snippets
+###### gdnsd zone file 'INCLUDE' generator for Netbox-generated IPv6 PTR snippets
 
-# Determines relative $ORIGIN based on the zone file itself, and then adds the 
-# INCLUDE for the /64 
+Determines relative $ORIGIN based on the zone file itself, and then adds the 
+INCLUDE for the /64.
 
 Usage:
 
