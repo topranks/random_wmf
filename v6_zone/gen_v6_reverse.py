@@ -30,9 +30,12 @@ def main():
             print("ERROR: {network} is not valid, needs to be /64 prefix.") 
             sys.exit(1)
 
+        # Find zonefile reverses for this prefix should go in
         zone_name = get_zone(network, reverse_zones)
         if zone_name not in zonefile_content:
             zonefile_content[zone_name] = {}
+
+        # Get the $ORIGIN and $INCLUDE statements to use for it in that zonefile
         origin, include = get_include(network, zone_name)
         if origin not in zonefile_content[zone_name]:
             zonefile_content[zone_name][origin] = []
@@ -44,6 +47,7 @@ def main():
     # Get netbox info for descriptions
     nb_data = get_netbox_info()
 
+    # Iterate over data and print the output
     for zonefile_name, origin_data in zonefile_content.items():
         print(f"\n\n**** {zonefile_name} ****\n")
         for origin_line, includes in origin_data.items():
@@ -61,7 +65,7 @@ def main():
     print()
 
 def get_zone(ip_network, reverse_zones):
-    """ Gets zone name reverse records for a given IP subnet should go in """
+    """ Gets the zone name reverse records for a given IP subnet should go in """
     for zone_network, zone_name in reverse_zones.items():
         if zone_network.version != ip_network.version:
             continue
@@ -70,7 +74,7 @@ def get_zone(ip_network, reverse_zones):
 
 
 def get_include(reverse_network, zone_name):
-    """ Gets the $ORIGIN statement needed in the given zone file, and the  """
+    """ Gets the $ORIGIN statement needed in the given zone file, and the INCLUDE to get under it  """
     full_reverse = reverse_network.network_address.reverse_pointer.split(".")
     
     include_file = ".".join(full_reverse[16:])
@@ -123,15 +127,14 @@ def get_netbox_info():
         "prefixes": args.prefixes.split(",")
     }
 
-
     query_result = get_graphql_query(prefix_query, prefix_query_vars)
+    # Make a dict keyed by the prefix from this data and return
     netbox_info = {}
     for prefix in query_result['prefix_list']:
         netbox_info[prefix['prefix']] = {
             'vlan': prefix['vlan'],
             'description': prefix['description']
         }
-
     return netbox_info
 
 
