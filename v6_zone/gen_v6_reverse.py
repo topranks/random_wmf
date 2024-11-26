@@ -3,14 +3,9 @@
 from os import listdir
 from os.path import isfile, join
 import ipaddress
-import yaml
 import argparse
 
-from pprintpp import pprint as pp
-
 import requests
-import urllib3
-urllib3.disable_warnings()
 
 parser = argparse.ArgumentParser(description='Reverse zone delegation helper')
 parser.add_argument('-p', '--prefixes', help='Commas-separated list of IPv6 subnets', required=True)
@@ -18,7 +13,6 @@ parser.add_argument('-d', '--dnsrepo', help='Path to zonefiles or templates in d
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-k', '--key', help='Netbox API Token / Key', type=str, default='')
 args=parser.parse_args()
-
 
 def main():
     # Get list of zones we are auth for from dns repo zone file names
