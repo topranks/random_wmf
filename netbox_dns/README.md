@@ -18,9 +18,9 @@ $INCLUDE snippets/wikimedia.org
 
 #### 2. This script generates one file for each zone we have records in Netbox for, and adds all the entries that belong to it to that single file
 
-#### 3. No "ORIGIN" directives are used within the snippet files for simplicity, instead the full set of labels relative to the zone the record is being placed in are used
+#### 3. No "ORIGIN" directives are used within the snippet files, instead the full set of labels required for the record in the given zone are used
  
-For instance we have this in the snippet file for 'wmnet':
+For instance we have entries like this in the zone file for 'wmnet':
 ```
 kafka-main1006.eqiad                     IN A       10.64.0.101
 ```
