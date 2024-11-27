@@ -8,7 +8,7 @@ The general approach is described in this [Phabricator task](https://phabricator
 
 In brief what we would do is:
 
-##### 1. For every zone we have netbox-based records for we add a single INCLUDE, at the zone "apex"
+#### 1. For every zone we have netbox-based records for we add a single INCLUDE, at the zone "apex"
 
 For instance:
 ```
@@ -16,9 +16,9 @@ $ORIGIN @Z
 $INCLUDE snippets/wikimedia.org
 ```
 
-##### 2. This script generates one file for each zone we have records in Netbox for, and adds all the entries that belong to it to that single file
+#### 2. The snippet file this points to contains all the records from Netbox for the zone
 
-##### 3. No "ORIGIN" directives are used within the snippet files, instead the full set of labels required for the record in the given zone are used
+#### 3. No "ORIGIN" directives are used within the snippet files
  
 For instance we have entries like this in the zone file for 'wmnet':
 ```
