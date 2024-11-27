@@ -10,7 +10,7 @@ In brief the approach is:
 
 #### 1. We take the set of zones we are auth for and map each Netbox record to the appropriate one
 
-#### 2. For each of them we add a single INCLUDE, at the zone "apex"
+#### 2. All records for a given zone go in the same snippet file, INCLUDED at the zone apex
 
 For instance:
 ```
@@ -18,9 +18,7 @@ $ORIGIN @Z
 $INCLUDE snippets/wikimedia.org
 ```
 
-#### 3. The snippet file this points to contains all the Netbox records for the zone
-
-#### 4. No "ORIGIN" directives are used within the snippet files
+#### 3. No "ORIGIN" directives are used within the snippet files
  
 For instance we have entries like this in the zone file for 'wmnet':
 ```
@@ -69,6 +67,4 @@ real	0m2.370s
 user	0m0.526s
 sys	0m0.031s
 ```
-
-
 
