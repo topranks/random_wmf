@@ -15,7 +15,7 @@ args = parser.parse_args()
 
 
 def main():
-    # Create vars to hold entries we will add to snippet for each zone in the dns repo
+    # Read zonefile names from dns repo and populate vars to store entries for each
     path = args.dnsrepo
     fwd_zone_names = [f for f in listdir(path) if isfile(join(path, f)) and not f.endswith('.arpa')]
     fwd_zone_entries = {zone_name: [] for zone_name in fwd_zone_names}
@@ -50,6 +50,7 @@ def main():
 
 
 def write_files(zone_entries):
+    """Writes contents of zone entries dicts to disk"""
     for zone_name, zone_records in zone_entries.items():
         if not zone_records:
             # We can skip this to create empty files if we wish
@@ -73,7 +74,9 @@ def get_fwd_zone(fqdn, zone_names):
 
 
 def get_rev_zone(ip_addr, rev_zone_subnets):
-    """ Gets the zone name reverse records for a given IP subnet should go in """
+    """Gets the zone name reverse records for a given IP subnet should go in.
+       We return the first match as we have no overlapping zones defined for 
+       reverses nor are we likely to have, so we don't need to find most specific"""
     for zone_network, zone_name in rev_zone_subnets.items():
         if zone_network.version == ip_addr.version and zone_network.supernet_of(ip_addr.network):
             return zone_name
@@ -90,16 +93,19 @@ def get_ip_subnet(zone_name):
         max_elements = 32
         elements = zone_name.replace('.ip6.arpa', '').split('.')
 
+    # Reverse the elements as the zone name has them backwards to the IP
     elements.reverse()
     pfxlen = len(elements) * bits_per_element
+    # Pad out the elements array with zeros so it's the length of a full address
     while len(elements) < max_elements:
         elements.append('0')
 
     if max_elements == 32:
-        # Each 'element' is one hex digit but we need to group into four to create the IP
+        # Each IPv6 'element' is one hex digit, we group into four to write the IP
         quartets = [''.join(elements[i:i+4]) for i in range(0, len(elements), 4)]
         return ipaddress.ip_network(f"{':'.join(quartets)}/{pfxlen}")
     else:
+        # IPv4 'elements' are 0-255 already so we can create it directly
         return ipaddress.ip_network(f"{'.'.join(elements)}/{pfxlen}")
 
 
