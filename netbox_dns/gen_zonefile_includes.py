@@ -109,7 +109,7 @@ def get_ip_subnet(zone_name):
         return ipaddress.ip_network(f"{'.'.join(elements)}/{pfxlen}")
 
 
-def get_netbox_ips():
+def get_netbox_ips() -> list:
     """Gets list of IPs in Netbox with dns_name attributes"""
     ip_query = """
         {
@@ -124,16 +124,13 @@ def get_netbox_ips():
     return get_graphql_query(ip_query)['ip_address_list']
 
 
-def get_graphql_query(query: str, variables: dict = None) -> dict:
+def get_graphql_query(query: str) -> dict:
     """Sends graphql query to netbox and returns JSON result as dict"""
     url = f"https://{args.netbox}/graphql/"
     headers = {
         'Authorization': f'Token {args.key}'
     }
     data = {"query": query}
-    if variables is not None:
-        data['variables'] = variables
-
     response = requests.post(url=url, headers=headers, json=data)
     response.raise_for_status()
     return response.json()['data']
