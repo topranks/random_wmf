@@ -37,9 +37,12 @@ put the full records in.
 
 ### Running this script
 
-The script is fairly easy to run.  It needs access to the dns_repo files, as it uses the list of 
-files from it to build a list of the zones we are auth for.  Thanks to the use of GraphQL it 
-can build all the snippets in only a few seconds.
+The script is fairly easy to run.  It does need a local copy of the dns repo so it can list 
+the files and compile a list of zone names we are auth for from that.  This path can be 
+passed as a command-line argument, as can a Netbox API key to allow it to get the IP 
+records from Netbox.
+
+Thanks to GraphQL it runs quickly, generating all the records in only a few seconds:
 ```
 cmooney@wikilap:~$ time ./gen_zonefile_includes.py --key <netbox_api_token> --dns_repo <path_to_template_dir>
 Skipping reverse for 27.111.227.106/29 as it doesn't fit into any zone we are auth for
