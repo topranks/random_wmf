@@ -62,7 +62,7 @@ def write_files(zone_entries):
 
 
 def get_fwd_zone(fqdn, zone_names):
-    """Returns zone name from zone_names with most specific match for fqdn"""
+    """Returns zone name with most specific match for fqdn"""
     longest_match = 0
     matching_zone = None
     for zone_name in zone_names:
