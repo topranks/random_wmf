@@ -98,7 +98,6 @@ def get_ip_subnet(zone_name):
     if max_elements == 32:
         # Each 'element' is one hex digit but we need to group into four to create the IP
         quartets = [''.join(elements[i:i+4]) for i in range(0, len(elements), 4)]
-        # Convert to ipaddress object and back again to minimize v6 addr
         return ipaddress.ip_network(f"{':'.join(quartets)}/{pfxlen}")
     else:
         return ipaddress.ip_network(f"{'.'.join(elements)}/{pfxlen}")
