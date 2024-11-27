@@ -8,7 +8,7 @@ The general approach is described in this [Phabricator task](https://phabricator
 
 In brief what we would do is:
 
-#### For every zone we have netbox-based records for we add a single INCLUDE, at the zone "apex".
+#### 1. For every zone we have netbox-based records for we add a single INCLUDE, at the zone "apex".
 
 For instance:
 ```
@@ -16,11 +16,9 @@ $ORIGIN @Z
 $INCLUDE snippets/wikimedia.org
 ```
 
-#### This script generates one file for each zone we have records in Netbox for, and adds all the 
-entries that belong to it to that single file.
+#### 2. This script generates one file for each zone we have records in Netbox for, and adds all the entries that belong to it to that single file.
 
-#### No "ORIGIN" directives are used within the snippet files for simplicity, instead the full set 
-of labels relative to the zone the record is being placed in are used.
+#### 3. No "ORIGIN" directives are used within the snippet files for simplicity, instead the full set of labels relative to the zone the record is being placed in are used.
  
 For instance we have this in the snippet file for 'wmnet':
 ```
@@ -37,7 +35,7 @@ The ORIGIN directives can of course still be used for manual entries in the zone
 but when automating the creation of the snippets it seems simpler and less error-prone to just 
 put the full records in.
 
-## Running this script
+### Running this script
 
 The script is fairly easy to run.  It needs access to the dns_repo files, as it uses the list of 
 files from it to build a list of the zones we are auth for.  Thanks to the use of GraphQL it 
