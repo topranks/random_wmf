@@ -6,9 +6,11 @@ Netbox without as much complication as we have now.
 
 The general approach is described in this [Phabricator task](https://phabricator.wikimedia.org/T362985)
 
-In brief what we would do is:
+In brief the approach is:
 
-#### 1. For every zone we have netbox-based records for we add a single INCLUDE, at the zone "apex"
+#### 1. We take the set of zones we are auth for and map each Netbox record to the appropriate one
+
+#### 2. For each of them we add a single INCLUDE, at the zone "apex"
 
 For instance:
 ```
@@ -16,9 +18,9 @@ $ORIGIN @Z
 $INCLUDE snippets/wikimedia.org
 ```
 
-#### 2. The snippet file this points to contains all the records from Netbox for the zone
+#### 3. The snippet file this points to contains all the Netbox records for the zone
 
-#### 3. No "ORIGIN" directives are used within the snippet files
+#### 4. No "ORIGIN" directives are used within the snippet files
  
 For instance we have entries like this in the zone file for 'wmnet':
 ```
@@ -30,6 +32,8 @@ Instead of:
 $ORIGIN eqiad.@Z
 kafka-main1006                           IN A       10.64.0.101
 ```
+
+This is more of a style thing than anything, but it keeps the automation cleaner and simpler.
 
 The ORIGIN directives can of course still be used for manual entries in the zonefiles themselves, 
 but when automating the creation of the snippets it seems simpler and less error-prone to just 
