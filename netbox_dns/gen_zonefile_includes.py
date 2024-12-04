@@ -58,6 +58,7 @@ def write_files(zone_entries):
 
         Path("snippets").mkdir(exist_ok=True)
         with open(f"snippets/{zone_name}", "w") as outfile:
+            outfile.write("$ORIGIN @Z\n")
             for zone_record in zone_records:
                 outfile.write(f"{zone_record}\n")
 
