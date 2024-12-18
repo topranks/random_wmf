@@ -76,7 +76,7 @@ def get_fwd_zone(fqdn, zone_names):
 
 
 def get_rev_zone(ip_addr, rev_zone_subnets):
-    """Gets the zone name reverse records for a given IP subnet should go in.
+    """Gets the zone name that reverse records for a given IP subnet should go in.
        We return the first match as we have no overlapping zones defined for 
        reverses nor are we likely to have, so we don't need to find most specific"""
     for zone_network, zone_name in rev_zone_subnets.items():
