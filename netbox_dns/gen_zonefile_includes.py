@@ -103,11 +103,11 @@ def get_ip_subnet(zone_name):
         labels.append('0')
 
     if num_labels == 32:
-        # IPv6: each 'label' is one hex digit, we group into four to write the IP
+        # IPv6: each label is one hex digit, we group into four to write the IP
         quartets = [''.join(labels[i:i+4]) for i in range(0, len(labels), 4)]
         return ipaddress.ip_network(f"{':'.join(quartets)}/{pfxlen}")
     else:
-        # IPv4: 'labels' are 0-255 already so we can use them directly
+        # IPv4: labels are 0-255 already so we can use them directly
         return ipaddress.ip_network(f"{'.'.join(labels)}/{pfxlen}")
 
 
