@@ -15,7 +15,7 @@ args = parser.parse_args()
 
 
 def main():
-    # Read zonefile names from dns repo and populate vars to store entries for each
+    # Read zonefile names from dns repo and generate dicts to store entries for each
     path = args.dnsrepo
     fwd_zone_names = [f for f in listdir(path) if isfile(join(path, f)) and not f.endswith('.arpa')]
     fwd_zone_entries = {zone_name: [] for zone_name in fwd_zone_names}
@@ -118,8 +118,6 @@ def get_netbox_ips() -> list:
             ip_address_list(filters: { NOT: {dns_name:{exact:""} }}) {
                 address
                 dns_name
-                status
-                role
             }
         }
     """
