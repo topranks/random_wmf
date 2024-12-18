@@ -107,7 +107,7 @@ def get_ip_subnet(zone_name):
         quartets = [''.join(elements[i:i+4]) for i in range(0, len(elements), 4)]
         return ipaddress.ip_network(f"{':'.join(quartets)}/{pfxlen}")
     else:
-        # IPv4: 'elements' are 0-255 already so we can write them directly
+        # IPv4: 'elements' are 0-255 already so we can use them directly
         return ipaddress.ip_network(f"{'.'.join(elements)}/{pfxlen}")
 
 
