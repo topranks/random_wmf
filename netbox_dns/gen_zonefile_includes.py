@@ -56,6 +56,7 @@ def write_files(zone_entries):
             # We can skip this to create empty files if we wish
             continue
 
+        # TODO - We should sort the entries so adjacent ones always are beside each other for diff
         Path("snippets").mkdir(exist_ok=True)
         with open(f"snippets/{zone_name}", "w") as outfile:
             outfile.write("$ORIGIN @Z\n")

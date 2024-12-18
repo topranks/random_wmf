@@ -14,8 +14,7 @@ In brief the approach is:
 
 For instance:
 ```
-$ORIGIN @Z
-$INCLUDE snippets/wikimedia.org
+$INCLUDE snippets/wikimedia.org @Z
 ```
 
 #### 3. No "ORIGIN" directives are used within the snippet files
