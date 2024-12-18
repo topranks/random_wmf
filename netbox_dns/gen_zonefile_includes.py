@@ -98,7 +98,7 @@ def get_ip_subnet(zone_name):
     # Reverse the elements as the zone name has them backwards to the IP
     elements.reverse()
     pfxlen = len(elements) * bits_per_element
-    # Pad out the elements array with zeros so it's the length of a full address
+    # Pad out the elements array with zeros to make the full network address
     while len(elements) < max_elements:
         elements.append('0')
 
