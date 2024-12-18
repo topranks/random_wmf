@@ -87,28 +87,28 @@ def get_rev_zone(ip_addr, rev_zone_subnets):
 def get_ip_subnet(zone_name):
     """ Returns the IP subnet corresponding to a dns reverse zone name """
     if zone_name.endswith('in-addr.arpa'):
-        bits_per_element = 8
-        max_elements = 4
-        elements = zone_name.replace('.in-addr.arpa', '').split('.')
+        bits_per_label = 8
+        num_labels = 4
+        labels = zone_name.replace('.in-addr.arpa', '').split('.')
     elif zone_name.endswith('ip6.arpa'):
-        bits_per_element = 4
-        max_elements = 32
-        elements = zone_name.replace('.ip6.arpa', '').split('.')
+        bits_per_label = 4
+        num_labels = 32
+        labels = zone_name.replace('.ip6.arpa', '').split('.')
 
-    # Reverse the elements as the zone name has them backwards to the IP
-    elements.reverse()
-    pfxlen = len(elements) * bits_per_element
-    # Pad out the elements array with zeros to make the full network address
-    while len(elements) < max_elements:
-        elements.append('0')
+    # Reverse the labels as the zone name has them backwards to the IP
+    labels.reverse()
+    pfxlen = len(labels) * bits_per_label
+    # Pad out the labels array with zeros to make the full network address
+    while len(labels) < num_labels:
+        labels.append('0')
 
-    if max_elements == 32:
-        # IPv6: each 'element' is one hex digit, we group into four to write the IP
-        quartets = [''.join(elements[i:i+4]) for i in range(0, len(elements), 4)]
+    if num_labels == 32:
+        # IPv6: each 'label' is one hex digit, we group into four to write the IP
+        quartets = [''.join(labels[i:i+4]) for i in range(0, len(labels), 4)]
         return ipaddress.ip_network(f"{':'.join(quartets)}/{pfxlen}")
     else:
-        # IPv4: 'elements' are 0-255 already so we can use them directly
-        return ipaddress.ip_network(f"{'.'.join(elements)}/{pfxlen}")
+        # IPv4: 'labels' are 0-255 already so we can use them directly
+        return ipaddress.ip_network(f"{'.'.join(labels)}/{pfxlen}")
 
 
 def get_netbox_ips() -> list:
