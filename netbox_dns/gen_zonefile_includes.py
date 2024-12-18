@@ -85,7 +85,7 @@ def get_rev_zone(ip_addr, rev_zone_subnets):
 
 
 def get_ip_subnet(zone_name):
-    """ Returns the IP subnet corresponding to a dns reverse zone name """
+    """Returns the IP subnet corresponding to a dns reverse zone name"""
     if zone_name.endswith('in-addr.arpa'):
         bits_per_label = 8
         num_labels = 4
@@ -98,7 +98,7 @@ def get_ip_subnet(zone_name):
     # Reverse the labels as the zone name has them backwards to the IP
     labels.reverse()
     pfxlen = len(labels) * bits_per_label
-    # Pad out the labels array with zeros to make the full network address
+    # Pad out the labels array with zeros to represent the full network address
     while len(labels) < num_labels:
         labels.append('0')
 
@@ -115,10 +115,10 @@ def get_netbox_ips() -> list:
     """Gets list of IPs in Netbox with dns_name attributes"""
     ip_query = """
         {
-            ip_address_list(filters: { NOT: {dns_name:{exact:""} }}) {
-                address
-                dns_name
-            }
+          ip_address_list(filters: { NOT: {dns_name:{exact:""} }}) {
+            address
+            dns_name
+          }
         }
     """
     return get_graphql_query(ip_query)['ip_address_list']

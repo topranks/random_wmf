@@ -19,7 +19,8 @@ $INCLUDE snippets/wikimedia.org @Z
 
 #### 3. No "ORIGIN" directives are used within the snippet files
  
-For instance we have entries like this in the zone file for 'wmnet':
+We use the full set of labels, relative to the parent zone, and don't use any further $ORIGIN 
+directives.  For example entries are added to the 'wmnet' zone like this:
 ```
 kafka-main1006.eqiad                     IN A       10.64.0.101
 ```
@@ -30,7 +31,7 @@ $ORIGIN eqiad.@Z
 kafka-main1006                           IN A       10.64.0.101
 ```
 
-This is more of a style thing than anything, but it keeps the automation cleaner and simpler.
+That's more of a style thing than anything, but it keeps the automation cleaner and simpler.
 
 The ORIGIN directives can of course still be used for manual entries in the zonefiles themselves, 
 but when automating the creation of the snippets it seems simpler and less error-prone to just 
@@ -62,8 +63,8 @@ Skipping reverse for 2a00:1188:5:e::4/64 as it doesn't fit into any zone we are 
 
 Wrote output files into snippet dir.
 
-real	0m2.370s
-user	0m0.526s
-sys	0m0.031s
+real	0m2.084s
+user	0m0.497s
+sys	0m0.030s
 ```
 
