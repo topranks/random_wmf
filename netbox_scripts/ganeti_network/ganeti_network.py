@@ -6,6 +6,9 @@ import pynetbox
 import sys
 import ipaddress
 from jinja2 import Environment, FileSystemLoader
+import requests
+import sys
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
@@ -26,10 +29,6 @@ def main():
     nb_changes = False
     host = nb.dcim.devices.get(name=args.host)
     physical_int, switch, switch_int = get_switch_int(host)
-
-    if not str(physical_int).startswith('e'):
-        # Proper netdev name hasn't yet been imported from puppet to Netbox
-        physical_int = "<primary_int>"
 
     # Get the private vlan host has been provisioned for
     private_vlan = nb.ipam.vlans.get(name=switch_int.untagged_vlan.name)
@@ -88,16 +87,54 @@ def main():
 
 def get_switch_int(nb_host):
     """ Returns switch and interface object for a given server primary link """
+    physical_int = get_host_physical(nb_host)
+    if not str(physical_int).startswith('e'):
+        # Proper netdev name hasn't yet been imported from puppet to Netbox, run the puppetdb import script
+        print(f"Netbox primary interface is called {physical_int}, running PuppetDB import script to update...", end='')
+        nb_puppetdb_import(nb_host)
+        print(" done.")
+        physical_int = get_host_physical(nb_host)
+        if not str(physical_int).startswith('e'):
+            print(f"ERROR: Host interface name is not valid after PupetDB Netbox import, got {physical_int}.")
+
+    switch = nb.dcim.devices.get(name=physical_int.connected_endpoints[0].device.name)
+    switch_int = nb.dcim.interfaces.get(device_id=switch.id, name=physical_int.connected_endpoints[0].name)
+    return physical_int, switch, switch_int
+
+
+def get_host_physical(nb_host):
+    """Gets the host primary physical interface name"""
     ip_int = nb.dcim.interfaces.get(name=nb_host.primary_ip4.assigned_object, device_id=nb_host.id)
     if ip_int.type.value == "bridge":
+        # In this case we need the bridge member that is not a virtual int
         physical_int = nb.dcim.interfaces.get(device_id=nb_host.id, bridge_id=ip_int.id,
                                               type__n=('virtual', 'lag', 'bridge'), mgmt_only=False)
     else:
         physical_int = ip_int
 
-    switch = nb.dcim.devices.get(name=physical_int.connected_endpoints[0].device.name)
-    switch_int = nb.dcim.interfaces.get(device_id=switch.id, name=physical_int.connected_endpoints[0].name)
-    return physical_int, switch, switch_int
+    return physical_int
+
+
+def nb_puppetdb_import(nb_host):
+    """Executes the PuppetDB import script for the given host to populate Netbox with the correct interface names"""
+    url = nb.extras.scripts.get('import_server_facts.ImportPuppetDB').url
+    headers = {'Authorization': f'Token {args.key}'}
+    data = {'data': {'device': nb_host.name}, 'commit': 1}
+    
+    run_script = requests.post(url, headers=headers, json=data)
+    run_script.raise_for_status()
+
+    # Check the result until status is completed, limit is 10 tries with 5 second wait
+    tries = 0
+    completed = False
+    while not completed:
+        if tries > 10:
+            print(f"\nERROR: PuppetDB import script didn't complete within 50 seconds...")
+            sys.exit(1)
+        time.sleep(5)
+        status = requests.get(url, headers=headers)
+        completed = status.json()['result']['completed']
+        tries += 1
 
 
 if __name__=="__main__":
