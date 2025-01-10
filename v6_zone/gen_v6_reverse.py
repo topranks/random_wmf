@@ -15,9 +15,9 @@ parser.add_argument('-k', '--key', help='Netbox API Token / Key', type=str, defa
 args=parser.parse_args()
 
 def main():
-    # Get list of zones we are auth for from dns repo zone file names
+    # Get list of rev zones we are auth for from dns repo and determine subnet of each
     path = args.dnsrepo
-    zone_filenames = [f for f in listdir(path) if isfile(join(path, f)) and f.endswith('.arpa')]
+    zone_filenames = [f for f in listdir(path) if isfile(join(path, f)) and f.endswith('ip6.arpa')]
     reverse_zones = {}
     for zone_name in zone_filenames:
         subnet = get_ip_subnet(zone_name)
@@ -48,21 +48,21 @@ def main():
     nb_data = get_netbox_info()
 
     # Iterate over data and print the output
+    last_origin = ''
     for zonefile_name, origin_data in zonefile_content.items():
-        print(f"\n\n**** {zonefile_name} ****\n")
+        print(f"\n**** {zonefile_name} ****\n")
         for origin_line, includes in origin_data.items():
             for include in includes:
                 try:
                     if nb_data[include['prefix']]['vlan']:
-                        print(f"; Vlan {nb_data[include['prefix']]['vlan']['vid']} - {nb_data[include['prefix']]['vlan']['name']}")
+                        print(f"; Vlan {nb_data[include['prefix']]['vlan']['vid']} - {nb_data[include['prefix']]['vlan']['name']} - {include['prefix']}")
                     elif nb_data[include['prefix']]['description']:
-                        print(f"; {nb_data[include['prefix']]['description']}")
+                        print(f"; {nb_data[include['prefix']]['description']} - {include['prefix']}")
                 except KeyError as e:
                     print(f"### ERROR with prefix {network} - not found in nb_data")
                 print(origin_line)
-                print(include['include'])
+                print(f"{include['include']}\n")
 
-    print()
 
 def get_zone(ip_network, reverse_zones):
     """ Gets the zone name reverse records for a given IP subnet should go in """
