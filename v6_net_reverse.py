@@ -19,8 +19,10 @@ def main():
 
     for network in networks:
         chars = network.network_address.exploded.replace(':', '')
+        # Strip off the last N characters based on prefixlen (i.e. the "host" bits in this subnet)
         host_part_charlen = (128 - network.prefixlen) // 4
         network_chars = chars[:-host_part_charlen]
+        # Reverse the remaining chars as that's how we write reverse PTR zones
         revchars = network_chars[::-1]
         print(f"{network}: {'.'.join(revchars)}.ip6.arpa.")
 
