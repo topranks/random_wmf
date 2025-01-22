@@ -3,7 +3,7 @@
 import ipaddress
 import argparse
 
-parser = argparse.ArgumentParser(description='Reverse zone delegation helper')
+parser = argparse.ArgumentParser(description='IPv6 Subnet to PTR zone helper')
 parser.add_argument('-p', '--prefix', help='IPv6 subnet to show reverse zones for', required=True)
 args=parser.parse_args()
 
