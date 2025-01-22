@@ -14,8 +14,8 @@ def main():
         networks = [prefix]
     else:
         # Supplied prefix was not at nibble boundary, get the multiple smaller nets that will cover
-        closest_boundary = prefix.prefixlen + (4 - (prefix.prefixlen % 4))
-        networks = list(prefix.subnets(new_prefix=closest_boundary))
+        closest_nibble_pfxlen = prefix.prefixlen + (4 - (prefix.prefixlen % 4))
+        networks = list(prefix.subnets(new_prefix=closest_nibble_pfxlen))
 
     for network in networks:
         chars = network.network_address.exploded.replace(':', '')
