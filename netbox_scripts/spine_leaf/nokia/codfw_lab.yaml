@@ -1,0 +1,20 @@
+---
+devices:
+  spine:
+    - ssw2-a8-codfw
+    - ssw3-a8-codfw
+  leaf:
+    - lsw2-a8-codfw
+    - lsw3-a8-codfw
+    - lsw4-a8-codfw
+    - lsw5-a8-codfw
+subnets:
+  underlay_links: 10.192.253.0/24
+  underlay_loopbacks: 10.192.252.0/24
+  overlay_loopback4: 10.192.255.0/24
+  overlay_loopback6: 2620:0:860:13f::/64
+  vlan4: 10.192.0.0/12
+  vlan6: 2620:0:860:100::/56
+vlans:
+  vlan_start: 2051
+skip_spine_int: []
