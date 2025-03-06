@@ -88,13 +88,13 @@ def main():
 def get_switch_int(nb_host):
     """ Returns switch and interface object for a given server primary link """
     print(f"Running Netbox import script to get latest interface names from PuppetDB...", end='')
-        nb_puppetdb_import(nb_host)
-        print(" done.")
-        physical_int = get_host_physical(nb_host)
-        if not str(physical_int).startswith('e'):
-            print(f"ERROR: Host interface name is not valid after PupetDB Netbox import, got {physical_int}.")
-        else:
-            print(f"Host primary physical interface according to PuppetDB is {physical_int}")
+    nb_puppetdb_import(nb_host)
+    print(" done.")
+    physical_int = get_host_physical(nb_host)
+    if not str(physical_int).startswith('e'):
+        print(f"ERROR: Host interface name is not valid after PupetDB Netbox import, got {physical_int}.")
+    else:
+        print(f"Host primary physical interface according to PuppetDB is {physical_int}")
 
     switch = nb.dcim.devices.get(name=physical_int.connected_endpoints[0].device.name)
     switch_int = nb.dcim.interfaces.get(device_id=switch.id, name=physical_int.connected_endpoints[0].name)
