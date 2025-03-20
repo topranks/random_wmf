@@ -21,7 +21,8 @@ from pprintpp import pprint as pp
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-k', '--key', help='Netbox API Token / Key', type=str, default='')
-parser.add_argument('-s', '--sshconfig', help='SSH config file', default='~/.ssh/config.homer')
+parser.add_argument('-s', '--sshconfig', help='SSH config file', default='/home/cmooney/.ssh/config.homer')
+parser.add_argument('--sshkey', help='SSH key to use file', default='/home/cmooney/.ssh/id_ed25519')
 args = parser.parse_args()
 
 junos_views_yaml = '''
@@ -59,6 +60,13 @@ bgp_transit6:
   rpc: get-bgp-summary-information
   args:
     group: "Transit6"
+  item: bgp-peer
+  view: bgp_transit_view
+
+bgp_switch:
+  rpc: get-bgp-summary-information
+  args:
+    group: "Switch"
   item: bgp-peer
   view: bgp_transit_view
 
@@ -112,6 +120,11 @@ def main():
             if bgp_peer.state != "Established":
                 problems.append(get_bgp_error(nb_device, bgp_peer, int_descriptions))
 
+        switch_data = bgp_switch(junos_dev).get()
+        for bgp_peer in switch_data:
+            if bgp_peer.state != "Established":
+                problems.append(get_bgp_error(nb_device, bgp_peer, int_descriptions))
+
         junos_dev.close()
         if problems:
             print(f"{nb_device.name:<10} FAILED")
@@ -160,11 +173,13 @@ def get_bgp_cct(nb_device, ip_addr):
 
 def get_junos_dev(dev_name):
     # Initiates NETCONF session to router
+    
     try:
         device = Device(dev_name, username=os.getlogin(), ssh_config=args.sshconfig, port=22)
         device.open()
     except ConnectError as err:
         print(f"Cannot connect to device: {err}")
+        print(err.with_traceback())
         sys.exit(1)
 
     return device
