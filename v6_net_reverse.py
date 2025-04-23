@@ -3,13 +3,21 @@
 import ipaddress
 import argparse
 
-parser = argparse.ArgumentParser(description='IPv6 Subnet to PTR zone helper')
-parser.add_argument('-p', '--prefix', help='IPv6 subnet to show reverse zones for', required=True)
+import sys
+
+parser = argparse.ArgumentParser(description='Reverse zone delegation helper')
+parser.add_argument('prefix')
 args=parser.parse_args()
 
 def main():
-    """Returns a list of DNS zone names that cover a given IPv6 subnet"""
-    prefix = ipaddress.ip_network(args.prefix)
+    try:
+        prefix = ipaddress.ip_network(args.prefix)
+    except ValueError:
+        # Not a valid CIDR network
+        ip_addr = ipaddress.ip_interface(args.prefix)
+        prefix = ip_addr.network
+        print(f"WARNING: {ip_addr} is not a valid network address, using {prefix}")
+
     if prefix.prefixlen % 4 == 0:
         networks = [prefix]
     else:
@@ -24,7 +32,8 @@ def main():
         network_chars = chars[:-host_part_charlen]
         # Reverse the remaining chars as that's how we write reverse PTR zones
         revchars = network_chars[::-1]
-        print(f"{network}: {'.'.join(revchars)}.ip6.arpa.")
+        print(f"{'.'.join(revchars)}.ip6.arpa.    ({network})")
 
 if __name__=="__main__":
     main()
+
