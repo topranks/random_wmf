@@ -25,7 +25,7 @@ def main():
 
     # The 'get_route_information' is basically 'show route', we can find this by running 
     # the CLI command with "| display xml rpc"
-    xml = junos_dev.rpc.get_route_information(terse=True, protocol='bgp', aspath_regex=args.aspath)
+    xml = junos_dev.rpc.get_route_information(terse=True, protocol='bgp', aspath_regex=args.aspath, dev_timeout=120)
     xml_str = etree.tostring(xml)
     data = xmltodict.parse(xml_str)
 
@@ -59,9 +59,8 @@ def main():
 def get_junos_dev(dev_name):
     # Initiates NETCONF session to router
     try:
-        device = Device(dev_name, username=os.getlogin(), ssh_config=args.sshconfig, port=22, timeout=120)
+        device = Device(dev_name, username=os.getlogin(), ssh_config=args.sshconfig, port=22)
         device.open()
-        device._conn.timeout = 120
     except ConnectError as err:
         print(f"Cannot connect to device: {err}")
         print(err.with_traceback())
