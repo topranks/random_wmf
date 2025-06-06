@@ -23,14 +23,14 @@ args = parser.parse_args()
 def main():
     junos_dev = get_junos_dev(args.router)
 
-    # The 'get_route_information' is basically 'show route', we can find this by running 
-    # the CLI command with "| display xml rpc"
+    # Execute the RPC on the remote device, we can find the name ('get_route_information') by running the CLI 
+    # command we are interested in ('show route' in this case) with "| display xml rpc"
     xml = junos_dev.rpc.get_route_information(terse=True, protocol='bgp', aspath_regex=args.aspath, dev_timeout=120)
     xml_str = etree.tostring(xml)
     data = xmltodict.parse(xml_str)
-
+    
+    # Parse the returned data into lists of ip networks in each table
     route_tables = {}
-
     for route_table in data['route-information']['route-table']:
         if 'rt' not in route_table:
             continue
