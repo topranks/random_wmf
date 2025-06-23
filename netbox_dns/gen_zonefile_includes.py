@@ -59,7 +59,7 @@ def main():
         if fwd_zone is not None:
             record_type = 'A' if ip_addr.version == 4 else 'AAAA'
             label = fqdn.replace(f'.{fwd_zone}', '')
-            fwd_zone_entries[fwd_zone].append(f"{label:40} IN {record_type:7} {ip_addr.ip}")
+            fwd_zone_entries[fwd_zone].append(f"{label:40} IN {record_type:7} {ip_addr.ip.compressed}")
 
         # Reverse entry
         rev_zone = get_rev_zone(ip_addr, rev_zone_subnets)
