@@ -1,25 +1,50 @@
 #!/usr/bin/python3
+import json
 
 from os import listdir
 from os.path import isfile, join
 from pathlib import Path
+
 import ipaddress
 import argparse
 import requests
 
 parser = argparse.ArgumentParser(description='Netbox zonefile snippet/record generator')
-parser.add_argument('-d', '--dnsrepo', help='Path to zonefiles or templates in dns repo', default='/home/cmooney/repos/dns/templates')
-parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
+parser.add_argument('-d',
+                    '--dnsrepo',
+                    help='Path to zonefiles or templates in Gerrit repo',
+                    default='https://gerrit.wikimedia.org/r/plugins/gitiles/operations/dns/+/refs/heads/master/templates/'
+                    )
+parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox-next.wikimedia.org")
 parser.add_argument('-k', '--key', help='Netbox API Token / Key', type=str, default='')
 args = parser.parse_args()
 
+USER_AGENT = {
+    "User-Agent": "Netbox DNS Zonefile Generator 1.0",
+    "From": "infrastructure-foundation@wikimedia.org"
+}
+
+
+def dns_templates_names():
+    # Read zonefile names from dns repo and generate a list of template names
+    url = f"{args.dnsrepo}?format=json"
+    response = requests.get(url, headers=USER_AGENT)
+
+    # Do the little Gerrit dance to strip the broken first line of JSON that
+    # Gerrit always output.
+    data = response.text
+    if data.startswith(")]}'"):
+        data = response.text[4:]
+
+    # Only return actual files, e.g. blobs and skip trees (directories).
+    return [t["name"] for t in json.loads(data)["entries"] if t["type"] == "blob"]
 
 def main():
-    # Read zonefile names from dns repo and generate dicts to store entries for each
-    path = args.dnsrepo
-    fwd_zone_names = [f for f in listdir(path) if isfile(join(path, f)) and not f.endswith('.arpa')]
+    # Generate dicts with zone names to store entries for each zone
+    templates = dns_templates_names()
+    fwd_zone_names = [f for f in templates if not f.endswith('.arpa')]
     fwd_zone_entries = {zone_name: [] for zone_name in fwd_zone_names}
-    rev_zone_entries = {f: [] for f in listdir(path) if isfile(join(path, f)) and f.endswith('.arpa')}
+    rev_zone_entries = {f: [] for f in templates if f.endswith('.arpa')}
     # Dict keyed by ipaddress.ip_network objects with values of corresponding rev zone name
     rev_zone_subnets = {get_ip_subnet(zone_name): zone_name for zone_name in rev_zone_entries.keys()}
 
@@ -130,6 +155,7 @@ def get_graphql_query(query: str) -> dict:
     headers = {
         'Authorization': f'Token {args.key}'
     }
+    headers.update(USER_AGENT)
     data = {"query": query}
     response = requests.post(url=url, headers=headers, json=data)
     response.raise_for_status()
@@ -137,4 +163,5 @@ def get_graphql_query(query: str) -> dict:
 
 
 if __name__ == "__main__":
+    #dns_templates()
     main()
