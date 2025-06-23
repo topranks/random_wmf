@@ -163,5 +163,4 @@ def get_graphql_query(query: str) -> dict:
 
 
 if __name__ == "__main__":
-    #dns_templates()
     main()
