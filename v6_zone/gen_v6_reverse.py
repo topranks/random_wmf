@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser(description='Reverse zone delegation helper')
 parser.add_argument('-p', '--prefixes', help='Commas-separated list of IPv6 subnets', required=True)
 parser.add_argument('-d', '--dnsrepo', help='Path to zonefiles or templates in dns repo', default='/home/cmooney/repos/dns/templates')
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
-parser.add_argument('-k', '--key', help='Netbox API Token / Key', type=str, default='')
+parser.add_argument('-k', '--key', help='Netbox API Token / Key', type=str, default='', required=True)
 args=parser.parse_args()
 
 def main():
