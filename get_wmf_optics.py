@@ -113,11 +113,14 @@ def get_sfp_type(port_info):
     """Managles the SFP names as we need to to make the output cleaner"""
     sfp_type = port_info['cable-type'].replace("BASE ", "-")
     alias = {
+        "GIGE 1000T": "1G-T",
         "100G-LR4 Lite": "100G-CWDM4",
         "GIGE 1000LX10": "1G-LX",
         "4X10G-LR": "4x10G-LR"
     }
     sfp_type = alias[sfp_type] if sfp_type in alias else sfp_type
+    sfp_type = sfp_type.replace("-CU", "-DAC")
+    sfp_type = sfp_type.replace("SFP28-25G-BASE", "25G")
 
     use_code_for = ('unknown')
     if sfp_type.lower().startswith((use_code_for)):
