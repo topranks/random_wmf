@@ -16,6 +16,8 @@ import pynetbox
 from getpass import getpass
 import ipaddress
 
+from requests import Session
+
 from pprintpp import pprint as pp
 
 parser = argparse.ArgumentParser()
@@ -85,6 +87,9 @@ def main():
         nb_key = getpass(prompt="Netbox API Key: ")
     global nb
     nb = pynetbox.api(nb_url, nb_key)
+    http_session = Session()
+    http_session.headers.update({'User-Agent': f'Cathal_Pynetbox_Checkwan_Script'})
+    nb.http_session = http_session
 
     globals().update(FactoryLoader().load(yaml.safe_load(junos_views_yaml)))
 
@@ -183,6 +188,32 @@ def get_junos_dev(dev_name):
         sys.exit(1)
 
     return device
+
+def get_cr_fqdns() -> list:
+    """Gets list of IPs in Netbox with dns_name attributes"""
+    device_query = """
+        {
+          device_list(filters: {status:"active", role:"cr"}) {
+            primary_ip4 {
+              dns_name
+            }
+          }
+        }
+    """
+    result = get_graphql_query(device_query)['device_list']
+    return [router['primary_ip4']['dns_name'] for router in result]
+
+
+def get_graphql_query(query: str) -> dict:
+    """Sends graphql query to netbox and returns JSON result as dict"""
+    url = f"https://{args.netbox}/graphql/"
+    headers = {
+        'Authorization': f'Token {args.key}'
+    }
+    data = {"query": query}
+    response = requests.post(url=url, headers=headers, json=data)
+    response.raise_for_status()
+    return response.json()['data']
 
 
 if __name__ == '__main__':
