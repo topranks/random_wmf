@@ -5,8 +5,6 @@ import requests
 import sys
 import pynetbox
 
-from pprintpp import pprint as pp
-
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--netbox', help='Netbox server IP / Hostname', type=str, default="netbox.wikimedia.org")
 parser.add_argument('-k', '--key', help='API Token / Key', required=True, type=str)
