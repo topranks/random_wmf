@@ -14,10 +14,11 @@ args = parser.parse_args()
 
 def main():
     nb = get_nb()
-    # Get locations from the row letters and format so it can be used in graphql query
+    # We can only use location ids in the graphql query, so get them with pynetbox
     location_names = [f"{args.site}-row-{row}" for row in args.row.split(",")]
     locations = nb.dcim.locations.filter(site=args.site, slug=location_names)
     location_ids = [str(location.id) for location in locations]
+    # Format it as a string we can use in the graphql
     location_id_str = str(location_ids).replace("'", '"')
 
     servers = get_row_servers(location_id_str)
@@ -26,6 +27,7 @@ def main():
             print(f"{server['name']},{server['primary_ip4']['assigned_object']['connected_endpoints'][0]['device']['name']},"
                   f"{server['primary_ip4']['assigned_object']['connected_endpoints'][0]['name']}")
         except (TypeError, IndexError):
+            # TODO this is probabaly at least ganeti or other things where primary_ip is not on physical int
             print(f"{server['name']},ERROR,ERROR")
 
 
@@ -38,7 +40,7 @@ def get_row_servers(location_ids) -> list:
             filters: {{
               role: "server"
               status: "active"
-              location_id: {str(location_ids)}
+              location_id: {location_ids}
             }}
           ) {{
             name
@@ -59,7 +61,9 @@ def get_row_servers(location_ids) -> list:
         }}
         }}
     """
-    return get_graphql_query(server_query)['device_list']
+    print(server_query)
+    return []
+    # return get_graphql_query(server_query)['device_list']
 
 
 def get_graphql_query(query: str) -> dict:
