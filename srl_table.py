@@ -12,8 +12,8 @@ def main():
     with open(args.filename, 'r') as myfile:
         lines = myfile.readlines()
 
-
     heading_section = True
+    heading_lines = 0
     columns = []
     output_lines = []
 
@@ -22,8 +22,11 @@ def main():
             print(line.strip())
             continue 
         if line.startswith("+"):
+            if heading_section and line.startswith("+="):
+                heading_section = False
             continue
-        if heading_section and line.startswith("|"):
+        if heading_lines == 0 and line.startswith("|"):
+            heading_lines += 1
             # Add full line to our 'output_lines' as a list
             output_lines.append([text.strip() for text in line.strip().split("|")])
             # Parse the contents of each column to set title and max_width
@@ -32,13 +35,14 @@ def main():
                     "title": column_text.strip(),
                     "max_width": len(column_text.strip())
                 })
-            heading_section = False
             continue
         if line.startswith("|"):
             output_lines.append([text.strip() for text in line.strip().split("|")])
             for index, column_text in enumerate(line.strip().split("|")):
                 if len(column_text.strip()) > columns[index]['max_width']:
                     columns[index]['max_width'] = len(column_text.strip())
+            if heading_section:
+                heading_lines += 1
 
     first_line = "+"
     for column in columns:
@@ -55,8 +59,10 @@ def main():
             line += f" {column_text:<{columns[index]['max_width']}} |"
         print(line)
         if heading_section:
-            print(first_line.replace("-", "="))
-            heading_section = False
+            heading_lines -= 1
+            if heading_lines == 0:
+                print(first_line.replace("-", "="))
+                heading_section = False
     print(first_line)    
         
 
