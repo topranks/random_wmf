@@ -1,0 +1,38 @@
+query ($rack_id: [String!]) {
+  device_list(
+    filters: {
+      role: "server"
+      status: ["active", "planned"]
+      rack_id: $rack_id
+    }
+  ) {
+      name
+      id
+      interfaces(filters: { enabled: true, mgmt_only: false, connected: true } ) {
+        id
+        name
+        type
+        cable {
+          id
+          color
+          label
+          type
+        }
+        connected_endpoints {
+          ...on InterfaceType {
+            name
+            type
+            id
+            device {
+              name
+              role { slug }
+            }
+            untagged_vlan { 
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
