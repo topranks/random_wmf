@@ -25,7 +25,11 @@ def main():
 
     zonefile_content = {}
     for network_str in args.prefixes.split(","):
-        network = ipaddress.ip_network(network_str)
+        try:
+            network = ipaddress.ip_network(network_str)
+        except ValueError:
+            network = ipaddress.ip_interface(network_str).network
+            print(f"{network_str} is not a valid network prefix, using {network}")
         if network.prefixlen != 64:
             print("ERROR: {network} is not valid, needs to be /64 prefix.") 
             sys.exit(1)
@@ -142,7 +146,8 @@ def get_graphql_query(query: str, variables: dict = None) -> dict:
     """Sends graphql query to netbox and returns JSON result as dict"""
     url = f"https://{args.netbox}/graphql/"
     headers = {
-        'Authorization': f'Token {args.key}'
+        'Authorization': f'Token {args.key}',
+        'User-Agent': "cahtal_rev_zone_script"
     }
     data = {"query": query}
     if variables is not None:
